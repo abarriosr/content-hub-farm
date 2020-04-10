@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+
+  publisher:
+    hostname: publisher1.ngrok.io
+    build:
+      context: .
+    environment:
+      - SITE_ROLE=publisher
+      - PERSISTENT=true
+    volumes:
+      - html:/var/www/html
+#      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8081:80
+    networks:
+      ch_farm:
+        ipv4_address: 192.168.1.1
+
+  subscriber1:
+    hostname: subscriber1.ngrok.io
+    build:
+      context: .
+    environment:
+      - SITE_ROLE=publisher
+      - PERSISTENT=true
+    volumes:
+      - html:/var/www/html
+#      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8082:80
+    networks:
+      ch_farm:
+        ipv4_address: 192.168.1.2
+
+networks:
+  ch_farm:
+    ipam:
+      config:
+        - subnet: 192.168.0.0/16

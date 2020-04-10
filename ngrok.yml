@@ -1,0 +1,13 @@
+# Update and copy to ~/.ngrok2/ngrok.yml
+authtoken: <your_ngrok_api_token>
+tunnels:
+  publisher:
+    proto: "http"
+    addr: "8081"
+    hostname: publisher1.ngrok.io
+    host_header: publisher1.ngrok.io
+  subscriber1:
+    proto: "http"
+    addr: "8082"
+    hostname: subscriber1.ngrok.io
+    host_header: subscriber1.ngrok.io
