@@ -53,12 +53,17 @@ RUN set -x \
   && sed -i '/^group/c \group = nginx' /etc/php7/php-fpm.conf \
   && sed -i 's/^listen.allowed_clients/;listen.allowed_clients/' /etc/php7/php-fpm.conf
 
+# Adds Xdebug.
+RUN apk add php7-xdebug --repository http://dl-3.alpinelinux.org/alpine/edge/testing/
+
 #RUN rc-update add docker boot
 
 # Configure nginx
 COPY config/nginx.conf /etc/nginx/nginx.conf
 
 # Configure PHP-FPM
+RUN mkdir /etc/php7/custom.d
+COPY config/00_xdebug.conf /etc/php7/custom.d/00_xdebug.ini
 COPY config/fpm-pool.conf /etc/php7/php-fpm.d/zzz_custom.conf
 COPY config/php.ini /etc/php7/conf.d/zzz_custom.ini
 
@@ -71,6 +76,9 @@ COPY scripts/docker-entrypoint.sh /usr/local/bin/
 RUN ln -s /usr/local/bin/docker-entrypoint.sh / # backwards compat
 COPY scripts/publisher_install.sh /usr/local/bin
 COPY scripts/subscriber_install.sh /usr/local/bin
+COPY scripts/enable_xdebug.sh /usr/local/bin
+COPY scripts/disable_xdebug.sh /usr/local/bin
+COPY scripts/drush.sh /usr/local/bin
 
 RUN echo "Preparing MySQL..."
 RUN /usr/bin/mysql_install_db --user=mysql --datadir='/var/lib/mysql' \
@@ -78,10 +86,8 @@ RUN /usr/bin/mysql_install_db --user=mysql --datadir='/var/lib/mysql' \
     && sleep 5 \
     && /usr/bin/mysqladmin -u root password 'db' \
     && mysql -u root -pted -e "create database db;"
-EXPOSE 80
-
 RUN echo "Done."
 
-#CMD ["docker-entrypoint.sh"]
-
+#ENTRYPOINT ["docker-entrypoint.sh"]
+EXPOSE 80
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

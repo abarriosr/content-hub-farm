@@ -1,0 +1,51 @@
+#!/bin/bash
+
+CONTENT_HUB_FARM=content-hub-farm
+SCRIPT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+echo "-------------------------------------------------------------------"
+echo "Content Hub Farm Control Script"
+echo "Usage: \$./bin/chf <container> <command> <command-arguments>"
+echo "-------------------------------------------------------------------"
+
+# Obtaining the list of available containers.
+list=`docker ps --filter name=${CONTENT_HUB_FARM} | tail -n +2 | awk '{print $NF}'`
+
+# Checking if container is available.
+if [[ $list =~ (^|[[:space:]])"$1"($|[[:space:]]) ]] ; then
+    echo "Executing command '$2' on container '$1'..."
+  else
+    echo "Cannot connect to container '$1'. Plese select one of the following containers:"
+    echo "$list"
+    exit
+  fi
+
+# Checks that we provided a command to execute.
+if [ -z "$2" ]
+  then
+    echo "You need to provide a command to execute. Some examples below:"
+    echo ""
+    echo "\$./bin/chf content-hub-farm_publisher_1 enable_xdebug"
+    echo "\$./bin/chf content-hub-farm_subscriber1_1 drush status"
+    echo ""
+    exit
+fi
+
+# Eliminating second argument to pass to command script.
+args=""
+for i in "$@" ; do
+  if [ "$i" != "$2" ]; then
+    args="${args} $i"
+  fi
+done
+
+# All commands available are listed here.
+COMMAND="$2"
+COMMAND_FILE=${SCRIPT_DIRECTORY}/commands/${COMMAND}.sh
+
+if [ -f "$COMMAND_FILE" ]; then
+  source ${COMMAND_FILE} $args
+else
+  echo "The command ${COMMAND} is not implemented."
+fi
+
