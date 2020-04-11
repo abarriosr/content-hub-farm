@@ -23,7 +23,7 @@ else
   chmod -R 777 /var/www/html/web/sites/${HOSTNAME}
   chown -R nginx:nginx /var/www/html/web/sites/${HOSTNAME}
 
-  cd /var/www/html/web
+  cd /var/www/html/web || return;
   mkdir -p ./sites/${HOSTNAME}/files
   cp /var/www/html/web/sites/default/default.settings.php ./sites/${HOSTNAME}/settings.php
   chmod 777 ./sites/${HOSTNAME}/settings.php
@@ -33,13 +33,15 @@ else
   DRUSH="/var/www/html/vendor/bin/drush -l ${HOSTNAME}"
   echo "Done."
 
-  # Enable shared contrib modules.
-  echo "Enabling shared contributed modules..."
+  # Enable common contrib/custom modules.
+  # ----------------------------------------------
+  echo "Enabling common contributed modules..."
   $DRUSH pm-enable -y admin_toolbar \
     admin_toolbar_tools \
     devel \
     environment_indicator
   echo "Done."
+  # ----------------------------------------------
 
   # Customize site according to site role.
   case ${SITE_ROLE} in

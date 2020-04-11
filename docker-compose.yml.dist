@@ -10,32 +10,32 @@ services:
       - SITE_ROLE=publisher
       - PERSISTENT=true
     volumes:
-      - html:/var/www/html
+      - ./html:/var/www/html
 #      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 8081:80
     networks:
       ch_farm:
-        ipv4_address: 192.168.1.1
+        ipv4_address: 192.168.1.10
 
   subscriber1:
     hostname: subscriber1.ngrok.io
     build:
       context: .
     environment:
-      - SITE_ROLE=publisher
+      - SITE_ROLE=subscriber
       - PERSISTENT=true
     volumes:
-      - html:/var/www/html
+      - ./html:/var/www/html
 #      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 8082:80
     networks:
       ch_farm:
-        ipv4_address: 192.168.1.2
+        ipv4_address: 192.168.1.11
 
 networks:
   ch_farm:
     ipam:
       config:
-        - subnet: 192.168.0.0/16
+        - subnet: 192.168.1.0/24

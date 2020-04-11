@@ -79,3 +79,61 @@ Those entries have to paired together. Then run the Content Hub Farm as explaine
           hostname: subscriber3.ngrok.io
           host_header: subscriber3.ngrok.io
     ```
+  
+## Adding composer packages/drupal modules:
+You can customize your code build and add additional packages following these steps:
+
+- Stop all running containers. 
+- Copy the file **build.sh** into a new custom file that you can modify:
+
+        $cp build.sh build-custom.sh
+        
+- Edit the contents of the file **build-custom.sh** and add/modify your own list of composer packages in this part of the file:
+
+        # You can modify the list of packages defined in this block.
+        # -------------------------------------------------------------
+        COMPOSER_MEMORY_LIMIT=-1 composer require drupal/entity_browser \
+          && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/features \
+          && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/view_mode_selector \
+          && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/paragraphs
+        # -------------------------------------------------------------
+        
+- Build the new codebase by executing your custom build file:
+
+        $./build-custom.sh <ACH-BRANCH>
+  
+- Modify the list of drupal modules that you want to enable in ALL sites by editing the file **scripts/docker-entrypoint.sh** in this part:
+
+        # Enable common contrib/custom modules.
+        # ----------------------------------------------
+        echo "Enabling common contributed modules..."
+        $DRUSH pm-enable -y admin_toolbar \
+          admin_toolbar_tools \
+          devel \
+          environment_indicator
+        echo "Done."
+        # ----------------------------------------------
+- If you want to add drupal modules to only **publishers**, then modify the list of drupal modules in this file: **scripts/publisher_install.sh**:
+
+        # -------------------------------------------------------------
+        # Enable additional contrib/custom modules for publishers.
+        echo "Enabling additional contributed modules for publishers..."
+        $DRUSH pm-enable -y features
+        echo "Done."
+        # -------------------------------------------------------------
+        
+- If you want to add drupal modules to only **subscribers**, then modify the list of drupal modules in this file: **scripts/publisher_install.sh**:
+
+        # -------------------------------------------------------------
+        # Enable additional contrib/custom modules for subscribers.
+        echo "Enabling additional contributed modules for subscribers..."
+        $DRUSH pm-enable -y features
+        echo "Done."
+        # -------------------------------------------------------------
+
+## Modifications to the docker container:
+
+- If you don't want to modify the code but would like to customize the docker container then you can edit the file **Dockerfile** and rebuild the containers with the following command:
+
+        $docker-compose build
+        

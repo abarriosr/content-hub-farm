@@ -4,9 +4,8 @@ DOCROOT=html
 
 # If provided a branch name, use it, otherwise use default 8.x-2.x
 ACH_BRANCH=$1
-if [ -z "$1" ]
-  then
-    ACH_BRANCH=8.x-2.x
+if [ -z "$1" ]; then
+  ACH_BRANCH=8.x-2.x
 fi
 
 echo "---------------------------------------------------"
@@ -14,7 +13,8 @@ echo "You can provide a Content Hub branch as an argument (8.x-2.x):"
 echo "$./build.sh LCH-XXXX"
 echo "---------------------------------------------------"
 echo "Cleaning up existing directory $DOCROOT"
-sudo rm -Rf $DOCROOT
+chmod -R 777 $DOCROOT
+rm -Rf $DOCROOT
 mkdir $DOCROOT
 echo "Done."
 echo "Downloading Drupal..."
@@ -28,12 +28,12 @@ COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush:^9 \
   && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/devel \
   && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/devel_php \
   && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/environment_indicator \
-  && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/features \
   && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/admin_toolbar
 
 # You can modify the list of packages defined in this block.
 # -------------------------------------------------------------
 COMPOSER_MEMORY_LIMIT=-1 composer require drupal/entity_browser \
+  && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/features \
   && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/view_mode_selector \
   && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/paragraphs
 # -------------------------------------------------------------
