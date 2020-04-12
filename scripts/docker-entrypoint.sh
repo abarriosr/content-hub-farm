@@ -63,6 +63,10 @@ else
   echo "Setting up variables."
   $DRUSH -y config-set system.performance js.preprocess 0
   $DRUSH -y config-set system.performance css.preprocess 0
+
+  # Connect to Acquia Content Hub.
+  /usr/local/bin/ach_connect.sh
+
   $DRUSH cr
   echo "Done."
 fi

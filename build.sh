@@ -21,7 +21,7 @@ echo "Downloading Drupal..."
 COMPOSER_MEMORY_LIMIT=-1 composer create-project drupal/recommended-project $DOCROOT --no-interaction
 echo "Done."
 echo "Building Drupal contrib modules..."
-cd $DOCROOT
+cd $DOCROOT || exit
 # DO NOT MODIFY THIS LIST OF PACKAGES.
 COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush:^9 \
   && COMPOSER_MEMORY_LIMIT=-1 composer require phpunit/phpunit \

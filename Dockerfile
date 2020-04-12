@@ -76,6 +76,7 @@ COPY scripts/docker-entrypoint.sh /usr/local/bin/
 RUN ln -s /usr/local/bin/docker-entrypoint.sh / # backwards compat
 COPY scripts/publisher_install.sh /usr/local/bin
 COPY scripts/subscriber_install.sh /usr/local/bin
+COPY scripts/ach_connect.sh /usr/local/bin
 COPY scripts/enable_xdebug.sh /usr/local/bin
 COPY scripts/disable_xdebug.sh /usr/local/bin
 COPY scripts/drush.sh /usr/local/bin
