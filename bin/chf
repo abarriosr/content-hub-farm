@@ -5,8 +5,18 @@ SCRIPT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pw
 
 echo "-------------------------------------------------------------------"
 echo "Content Hub Farm Control Script"
-echo "Usage: \$./bin/chf <container> <command> <command-arguments>"
+echo ""
+echo "Usage: \$./bin/chf <CONTAINER> <COMMAND> <COMMAND-ARGUMENTS>"
+echo ""
+echo "To list all available commands: \$./bin/chf list-commands"
 echo "-------------------------------------------------------------------"
+
+# List all available commands if 'list-commands' argument is provided.
+if [ "$1" == "list-commands" ]; then
+  echo "Available Commands:"
+  ls -1 ${SCRIPT_DIRECTORY}/commands | sed -e 's/\.sh$//' | sed -e 's/^/ * /'
+  exit
+fi
 
 # Obtaining the list of available containers.
 list=`docker ps --filter name=${CONTENT_HUB_FARM} | tail -n +2 | awk '{print $NF}'`
@@ -15,8 +25,9 @@ list=`docker ps --filter name=${CONTENT_HUB_FARM} | tail -n +2 | awk '{print $NF
 if [[ $list =~ (^|[[:space:]])"$1"($|[[:space:]]) ]] ; then
     echo "Executing command '$2' on container '$1'..."
   else
-    echo "Cannot connect to container '$1'. Plese select one of the following containers:"
-    echo "$list"
+    echo "Cannot connect to container '$1'. Plese use one of the following containers:"
+    echo "$list" | sed -e 's/^/ * /'
+    echo ""
     exit
   fi
 
@@ -39,7 +50,6 @@ for i in "$@" ; do
   fi
 done
 
-# All commands available are listed here.
 COMMAND="$2"
 COMMAND_FILE=${SCRIPT_DIRECTORY}/commands/${COMMAND}.sh
 

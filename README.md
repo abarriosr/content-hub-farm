@@ -41,6 +41,19 @@ The purpose of this project is to be able to develop Content Hub without having 
         $docker-compose up
         
   Use this command every time you need to run the farm without any changes to the site codebase.
+  
+  **NOTE:**
+  For the moment (Until I fix the ENTRYPOINT) execute the following command after running the container to install the site:
+  
+        $docker-entrypoint.sh
+        
+## Execute commands on the containers
+
+Execute the Content Hub Farm Control script for instructions on how to use it. 
+
+        $./bin/chf list-commands   ; lists all available commands.
+        
+Use this script to enable/disable Xdebug, execute drush commands, etc.        
     
 ## Adding more publishers/subscribers:
 
@@ -61,6 +74,15 @@ Those entries have to paired together. Then run the Content Hub Farm as explaine
           # If persistent, the site will persist through `docker compose up`
           # Otherwise, the site will be re-installed.
           - PERSISTENT=true
+          # These are your Acquia Content Hub Credentials 
+          - ACH_API_KEY=00000000000000000000
+          - ACH_SECRET_KEY=1111111111111111111111111111111111111111
+          - ACH_CLIENT_NAME=subscriber2-docker
+          - ACH_HOSTNAME=https://plexus-dev.content-hub.acquia.com
+          # These are your Xdebug parameters.
+          - PHP_IDE_CONFIG=serverName=content-hub-farm_subscriber1_2
+          - XDEBUG_CONFIG=remote_port=9001 remote_autostart=1
+          - PHP_INI_XDEBUG_REMOTE_PORT=9001
         volumes:
           - html:/var/www/html
         ports:

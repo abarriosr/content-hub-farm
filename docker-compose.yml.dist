@@ -9,6 +9,13 @@ services:
     environment:
       - SITE_ROLE=publisher
       - PERSISTENT=true
+      - ACH_API_KEY=00000000000000000000
+      - ACH_SECRET_KEY=1111111111111111111111111111111111111111
+      - ACH_CLIENT_NAME=publisher1-docker
+      - ACH_HOSTNAME="https://plexus-dev.content-hub.acquia.com"
+      - PHP_IDE_CONFIG="serverName=content-hub-farm_publisher_1"
+      - XDEBUG_CONFIG="remote_port=9001 remote_autostart=1"
+      - PHP_INI_XDEBUG_REMOTE_PORT=9001
     volumes:
       - ./html:/var/www/html
 #      - /var/run/docker.sock:/var/run/docker.sock
@@ -25,6 +32,13 @@ services:
     environment:
       - SITE_ROLE=subscriber
       - PERSISTENT=true
+      - ACH_API_KEY=00000000000000000000
+      - ACH_SECRET_KEY=1111111111111111111111111111111111111111
+      - ACH_CLIENT_NAME=subscriber1-docker
+      - ACH_HOSTNAME=https://plexus-dev.content-hub.acquia.com
+      - PHP_IDE_CONFIG=serverName=content-hub-farm_subscriber1_1
+      - XDEBUG_CONFIG=remote_port=9001 remote_autostart=1
+      - PHP_INI_XDEBUG_REMOTE_PORT=9001
     volumes:
       - ./html:/var/www/html
 #      - /var/run/docker.sock:/var/run/docker.sock
