@@ -1,9 +1,17 @@
 #!/bin/bash
 
+# Default Site parameters.
 profile="standard"
 site_admin="admin"
 site_password="admin"
 site_mail="test@test.com"
+
+# Database credentials
+DB_USER='db';
+DB_PASS='db';
+DB_HOST='database';
+DB_NAME=`echo ${HOSTNAME} | awk -F'.' '{print $1}'`
+DB_URL="mysql://${DB_USER}:${DB_PASS}@${DB_HOST}:3306/${DB_NAME}"
 
 # If the site is not persistent then delete it and start over.
 if [ ${PERSISTENT} = false ]; then
@@ -29,7 +37,7 @@ else
   chmod 777 ./sites/${HOSTNAME}/settings.php
 
   # Site installation.
-  ../vendor/drush/drush/drush si -y $profile install_configure_form.enable_update_status_emails=NULL -y --account-name=${site_admin} --account-pass=${site_password} --account-mail=${site_mail} --site-mail=${site_mail} --site-name=${HOSTNAME} --sites-subdir=${HOSTNAME} --db-url=mysql://root:db@localhost:3306/db
+  ../vendor/drush/drush/drush si -y $profile install_configure_form.enable_update_status_emails=NULL -y --account-name=${site_admin} --account-pass=${site_password} --account-mail=${site_mail} --site-mail=${site_mail} --site-name=${HOSTNAME} --sites-subdir=${HOSTNAME} --db-url=${DB_URL}
   DRUSH="/var/www/html/vendor/bin/drush -l ${HOSTNAME}"
   echo "Done."
 

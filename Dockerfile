@@ -9,9 +9,9 @@ RUN set -x \
     nginx \
     curl \
     bash \
-    sqlite \
-    git \
-    openrc \
+#    sqlite \
+#    git \
+#    openrc \
     mysql \
     mysql-client \
     php7 php7-fpm \
@@ -56,6 +56,7 @@ RUN set -x \
 # Adds Xdebug.
 RUN apk add php7-xdebug --repository http://dl-3.alpinelinux.org/alpine/edge/testing/
 
+# Comment this line if we want to share the docker bus between containers.
 #RUN rc-update add docker boot
 
 # Configure nginx
@@ -70,24 +71,10 @@ COPY config/php.ini /etc/php7/conf.d/zzz_custom.ini
 # Configure supervisord
 COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Copy Site installation scripts.
 WORKDIR /var/www/html
-COPY scripts/docker-entrypoint.sh /usr/local/bin/
+# Copy Site scripts into the container.
+COPY scripts/*.sh /usr/local/bin/
 RUN ln -s /usr/local/bin/docker-entrypoint.sh / # backwards compat
-COPY scripts/publisher_install.sh /usr/local/bin
-COPY scripts/subscriber_install.sh /usr/local/bin
-COPY scripts/ach_connect.sh /usr/local/bin
-COPY scripts/enable_xdebug.sh /usr/local/bin
-COPY scripts/disable_xdebug.sh /usr/local/bin
-COPY scripts/drush.sh /usr/local/bin
-
-RUN echo "Preparing MySQL..."
-RUN /usr/bin/mysql_install_db --user=mysql --datadir='/var/lib/mysql' \
-    && (/usr/bin/mysqld_safe --datadir='/var/lib/mysql' &) \
-    && sleep 5 \
-    && /usr/bin/mysqladmin -u root password 'db' \
-    && mysql -u root -pted -e "create database db;"
-RUN echo "Done."
 
 #ENTRYPOINT ["docker-entrypoint.sh"]
 EXPOSE 80

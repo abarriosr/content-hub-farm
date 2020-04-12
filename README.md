@@ -1,11 +1,15 @@
 # content-hub-farm
-Builds a Content Hub Docker Farm of multiple Drupal publishers and subscribers for development purposes using the same codebase.
-It allows you to debug on any of the sites without having to switch your IDE code scope. See your code changes automatically on every site in the farm by modifying code in a single location. 
+Builds a Content Hub Docker Farm of multiple Drupal publishers and subscribers for development purposes using the same 
+codebase.
+It allows you to debug on any of the sites without having to switch your IDE code scope. See your code changes 
+automatically on every site in the farm by modifying code in a single location. 
 
-If you need more sites, just add some small changes to 2 YAML files and re-run the farm. That's pretty much all you need to do.
+If you need more sites, just add some small changes to 2 YAML files and re-run the farm. That's pretty much all you 
+need to do.
 You can make your sites persist next time you restart the farm. 
 
-The purpose of this project is to be able to develop Content Hub without having to spend time on building sites or doing any site configuration.
+The purpose of this project is to be able to develop Content Hub without having to spend time on building sites or 
+doing any site configuration.
 
 ## Building steps
 
@@ -28,7 +32,8 @@ The purpose of this project is to be able to develop Content Hub without having 
   Use this command every time you need to rebuild your sites' codebase.
 
 - Download and install [Ngrok](https://ngrok.com). You will need a paid version if you want to use multiple domains.
-  Go to your [dashboard page](https://dashboard.ngrok.com/auth) and obtain your **ngrok token**. You will need that for the following step.
+  Go to your [dashboard page](https://dashboard.ngrok.com/auth) and obtain your **ngrok token**. You will need that 
+  for the following step.
         
 - Run **ngrok** for multiple domains
 
@@ -43,7 +48,8 @@ The purpose of this project is to be able to develop Content Hub without having 
   Use this command every time you need to run the farm without any changes to the site codebase.
   
   **NOTE:**
-  For the moment (Until I fix the ENTRYPOINT) execute the following command after running the container to install the site:
+  For the moment (Until I fix the ENTRYPOINT ;-) execute the following command after running the container (from 
+  inside the container) to install the site:
   
         $docker-entrypoint.sh
         
@@ -60,7 +66,8 @@ Use this script to enable/disable Xdebug, execute drush commands, etc.
 To add more sites just add entries to the **docker-compose.yml** and **ngrok.yml** files. 
 Those entries have to paired together. Then run the Content Hub Farm as explained above.
 
-- Add entries into the docker-compose.yml file. For example, a second subscriber could be done by adding the following lines:
+- Add entries into the docker-compose.yml file. For example, a second subscriber could be done by adding the following 
+lines:
 
     ```  
       subscriber3:
@@ -81,8 +88,8 @@ Those entries have to paired together. Then run the Content Hub Farm as explaine
           - ACH_HOSTNAME=https://plexus-dev.content-hub.acquia.com
           # These are your Xdebug parameters.
           - PHP_IDE_CONFIG=serverName=content-hub-farm_subscriber1_2
-          - XDEBUG_CONFIG=remote_port=9001 remote_autostart=1
-          - PHP_INI_XDEBUG_REMOTE_PORT=9001
+          - XDEBUG_CONFIG=remote_port=9000 remote_autostart=1
+          - PHP_INI_XDEBUG_REMOTE_PORT=9000
         volumes:
           - html:/var/www/html
         ports:

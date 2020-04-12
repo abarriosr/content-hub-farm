@@ -1,7 +1,7 @@
 #!/bin/bash
 
-CONTENT_HUB_FARM=content-hub-farm
 SCRIPT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+CONTENT_HUB_FARM=`basename "$(dirname "$SCRIPT_DIRECTORY")"`
 
 echo "-------------------------------------------------------------------"
 echo "Content Hub Farm Control Script"

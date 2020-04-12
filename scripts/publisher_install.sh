@@ -27,7 +27,3 @@ echo "
 " >> /var/www/html/web/sites/${HOSTNAME}/settings.php
 chmod u-w /var/www/html/web/sites/${HOSTNAME}/settings.php
 echo "Done."
-
-# Configure API/Secret Keys.
-#  ../vendor/drush/drush/drush -y acquia:contenthub-connect-site --api_key=aaa --secret=aaa --hostname=http://172.28.1.1:5000 --client_name=docker-publisher
-
