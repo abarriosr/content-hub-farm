@@ -53,8 +53,11 @@ doing any site configuration.
         
         $./bin/chf up          ; Runs the farm.
         $./bin/chf up -d       ; Runs the farm in detached mode. Containers run in the background
+        $./bin/chf start       ; Start services.
         $./bin/chf stop        ; Stop services.
+        $./bin/chf restart     ; Restart services.
         $./bin/chf pause       ; Pause services.
+        $./bin/chf logs        ; View output logs from containers
         $./bin/chf build       ; Build or rebuild services.
         $./bin/chf down        ; Stop and remove containers and networks.
         $./bin/chf down -v     ; Stop and remove all above plus volumes. If used, It invalidates the persistent feature in sites.
@@ -64,7 +67,7 @@ doing any site configuration.
         $./bin/chf <CONTAINER> <COMMAND> <COMMAND-ARGUMENTS> ; General format.
         
         $./bin/chf <container> enable_xdebug ; Enables Xdebug in container.
-        $./bin/chf <container> drush status  ; Executes 'drush status' on site installed in this container
+        $./bin/chf <container> drush status  ; Executes 'drush status' on site installed in this container. You can execute any drush command.
                         
   Use this command every time you need to interact with the farm.
   For more instructions on how to use it, you can list all commands. 
@@ -74,6 +77,7 @@ doing any site configuration.
   Use this script to enable/disable Xdebug, execute drush commands, etc.    
  
   - **NOTE:**
+  
     For the moment (Until I fix the ENTRYPOINT ;-) execute the following command after creating and running the container (from 
     inside the container) to install the site:
   
@@ -101,6 +105,8 @@ lines:
           # If persistent, the site will persist through `docker compose up`
           # Otherwise, the site will be re-installed.
           - PERSISTENT=true
+          # The Drupal profile you wish to install (defaults to "standard")  
+          - DRUPAL_PROFILE=standard   
           # Content Hub Client Name (Has to be provided to connect to Acquia Content Hub).
           - ACH_CLIENT_NAME=subscriber2-docker
           # These are your Acquia Content Hub Credentials (override what is defined in database)  

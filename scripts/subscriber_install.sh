@@ -16,14 +16,15 @@ $DRUSH pm-enable -y acquia_contenthub \
 echo "Done."
 
 # Adding additional configuration to settings.php.
+SETTINGS_PHP=/var/www/html/web/sites/${HOSTNAME}/settings.php
 echo "Adding additional subscriber configuration to settings.php ..."
-chmod u+w /var/www/html/web/sites/${HOSTNAME}/settings.php
+chmod u+w ${SETTINGS_PHP}
 echo "
 //********************** Custom Settings ***************************
 \$config['environment_indicator.indicator']['bg_color'] = '#FFFA49';
 \$config['environment_indicator.indicator']['fg_color'] = '#565656';
 \$config['environment_indicator.indicator']['name'] = 'Subscriber';
-" >> /var/www/html/web/sites/${HOSTNAME}/settings.php
-chmod u-w /var/www/html/web/sites/${HOSTNAME}/settings.php
+" >> ${SETTINGS_PHP}
+chmod u-w ${SETTINGS_PHP}
 echo "Done."
 

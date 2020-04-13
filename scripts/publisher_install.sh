@@ -17,13 +17,14 @@ $DRUSH pm-enable -y acquia_contenthub \
 echo "Done."
 
 # Adding additional configuration to settings.php.
+SETTINGS_PHP=/var/www/html/web/sites/${HOSTNAME}/settings.php
 echo "Adding additional publisher configuration to settings.php ..."
-chmod u+w /var/www/html/web/sites/${HOSTNAME}/settings.php
+chmod u+w ${SETTINGS_PHP}
 echo "
 //********************** Custom Settings ***************************
 \$config['environment_indicator.indicator']['bg_color'] = '#008117';
 \$config['environment_indicator.indicator']['fg_color'] = '#DDDDDD';
 \$config['environment_indicator.indicator']['name'] = 'Publisher';
-" >> /var/www/html/web/sites/${HOSTNAME}/settings.php
-chmod u-w /var/www/html/web/sites/${HOSTNAME}/settings.php
+" >> ${SETTINGS_PHP}
+chmod u-w ${SETTINGS_PHP}
 echo "Done."
