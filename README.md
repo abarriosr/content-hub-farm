@@ -1,8 +1,10 @@
 # content-hub-farm
-Builds a Content Hub Docker Farm of multiple Drupal publishers and subscribers for development purposes using the same 
+Builds a Content Hub Docker Farm of multiple Drupal sites (publishers and subscribers) for development purposes using the same 
 codebase.
 It allows you to debug on any of the sites without having to switch your IDE code scope. See your code changes 
 automatically on every site in the farm by modifying code in a single location. 
+
+It creates a network of Drupal Muti-sites, each one of them on a different container, all connected together to the same Content Hub Subscription.
 
 If you need more sites, just add some small changes to 2 YAML files and re-run the farm. That's pretty much all you 
 need to do.
@@ -23,6 +25,8 @@ doing any site configuration.
 - Copy and edit your docker-compose.yml file:
  
         $cp docker-compose.yml.dist docker-compose.yml
+        
+  Add Content Hub Credentials to the **database** service.      
 
 - Build the containers
 
@@ -41,26 +45,40 @@ doing any site configuration.
         $ngrok ngrok authtoken <NGROK TOKEN>
         $ngrok start --all
        
-- Run the Content Hub Farm
+- Run/Stop the Content Hub Farm
 
-        $docker-compose up
+  Use the Content Hub Farm Control Script: 
+ 
+        $./bin/chf <COMMAND> <COMMAND-ARGUMENTS>  ; General format 
         
-  Use this command every time you need to run the farm without any changes to the site codebase.
+        $./bin/chf up          ; Runs the farm.
+        $./bin/chf up -d       ; Runs the farm in detached mode. Containers run in the background
+        $./bin/chf stop        ; Stop services.
+        $./bin/chf pause       ; Pause services.
+        $./bin/chf build       ; Build or rebuild services.
+        $./bin/chf down        ; Stop and remove containers and networks.
+        $./bin/chf down -v     ; Stop and remove all above plus volumes. If used, It invalidates the persistent feature in sites.
+
+  You can also execute operations on the containers:
+ 
+        $./bin/chf <CONTAINER> <COMMAND> <COMMAND-ARGUMENTS> ; General format.
+        
+        $./bin/chf <container> enable_xdebug ; Enables Xdebug in container.
+        $./bin/chf <container> drush status  ; Executes 'drush status' on site installed in this container
+                        
+  Use this command every time you need to interact with the farm.
+  For more instructions on how to use it, you can list all commands. 
+ 
+         $./bin/chf list-commands   ; lists all available commands.
+         
+  Use this script to enable/disable Xdebug, execute drush commands, etc.    
+ 
+  - **NOTE:**
+    For the moment (Until I fix the ENTRYPOINT ;-) execute the following command after creating and running the container (from 
+    inside the container) to install the site:
   
-  **NOTE:**
-  For the moment (Until I fix the ENTRYPOINT ;-) execute the following command after running the container (from 
-  inside the container) to install the site:
-  
-        $docker-entrypoint.sh
+            $docker-entrypoint.sh
         
-## Execute commands on the containers
-
-Execute the Content Hub Farm Control script for instructions on how to use it. 
-
-        $./bin/chf list-commands   ; lists all available commands.
-        
-Use this script to enable/disable Xdebug, execute drush commands, etc.        
-    
 ## Adding more publishers/subscribers:
 
 To add more sites just add entries to the **docker-compose.yml** and **ngrok.yml** files. 
@@ -75,16 +93,19 @@ lines:
         hostname: subscriber3.ngrok.io
         build:
           context: .
+        depends_on:
+          - database 
         environment:
           # There are two sites roles: 'publisher' or 'subscriber'.
           - SITE_ROLE=subscriber
           # If persistent, the site will persist through `docker compose up`
           # Otherwise, the site will be re-installed.
           - PERSISTENT=true
-          # These are your Acquia Content Hub Credentials 
+          # Content Hub Client Name (Has to be provided to connect to Acquia Content Hub).
+          - ACH_CLIENT_NAME=subscriber2-docker
+          # These are your Acquia Content Hub Credentials (override what is defined in database)  
           - ACH_API_KEY=00000000000000000000
           - ACH_SECRET_KEY=1111111111111111111111111111111111111111
-          - ACH_CLIENT_NAME=subscriber2-docker
           - ACH_HOSTNAME=https://plexus-dev.content-hub.acquia.com
           # These are your Xdebug parameters.
           - PHP_IDE_CONFIG=serverName=content-hub-farm_subscriber1_2
@@ -164,5 +185,5 @@ You can customize your code build and add additional packages following these st
 
 - If you don't want to modify the code but would like to customize the docker container then you can edit the file **Dockerfile** and rebuild the containers with the following command:
 
-        $docker-compose build
+        $./bin/chf build 
         

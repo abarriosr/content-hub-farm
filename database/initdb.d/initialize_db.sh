@@ -9,8 +9,8 @@ rm -f $sql
 touch $sql
 
 # Create databases passed in the $MYSQL_DATABASES environment variable.
-databases=`echo $MYSQL_DATABASES | awk -F, '{for(i=1;i<=NF;i++) print $i}'`
-for i in $databases ; do
+DATABASES=`echo $MYSQL_DATABASES | awk -F, '{for(i=1;i<=NF;i++) print $i}'`
+for i in $DATABASES ; do
   echo "CREATE DATABASE IF NOT EXISTS \`$i\`;" >> $sql
 done
 

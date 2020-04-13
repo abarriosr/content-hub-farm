@@ -2,23 +2,39 @@ version: "3"
 
 services:
 
+  database:
+    hostname: database.docker
+    build:
+      context: ./database
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: SxAf@@&^RGdSfG
+      ACH_API_KEY: 00000000000000000000
+      ACH_SECRET_KEY: 1111111111111111111111111111111111111111
+      ACH_HOSTNAME: https://plexus-dev.content-hub.acquia.com
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database/initdb.d:/docker-entrypoint-initdb.d
+    networks:
+      ch_farm:
+        ipv4_address: 192.168.1.100
+
   publisher:
     hostname: publisher1.ngrok.io
     build:
       context: .
+    depends_on:
+      - database
     environment:
       - SITE_ROLE=publisher
       - PERSISTENT=true
-      - ACH_API_KEY=00000000000000000000
-      - ACH_SECRET_KEY=1111111111111111111111111111111111111111
       - ACH_CLIENT_NAME=publisher1-docker
-      - ACH_HOSTNAME="https://plexus-dev.content-hub.acquia.com"
       - PHP_IDE_CONFIG="serverName=content-hub-farm_publisher_1"
       - XDEBUG_CONFIG=remote_port=9000 remote_autostart=1
       - PHP_INI_XDEBUG_REMOTE_PORT=9000
     volumes:
       - ./html:/var/www/html
-#      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 8081:80
     networks:
@@ -29,19 +45,17 @@ services:
     hostname: subscriber1.ngrok.io
     build:
       context: .
+    depends_on:
+      - database
     environment:
       - SITE_ROLE=subscriber
       - PERSISTENT=true
-      - ACH_API_KEY=00000000000000000000
-      - ACH_SECRET_KEY=1111111111111111111111111111111111111111
       - ACH_CLIENT_NAME=subscriber1-docker
-      - ACH_HOSTNAME=https://plexus-dev.content-hub.acquia.com
       - PHP_IDE_CONFIG=serverName=content-hub-farm_subscriber1_1
       - XDEBUG_CONFIG=remote_port=9000 remote_autostart=1
       - PHP_INI_XDEBUG_REMOTE_PORT=9000
     volumes:
       - ./html:/var/www/html
-#      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 8082:80
     networks:
@@ -53,3 +67,5 @@ networks:
     ipam:
       config:
         - subnet: 192.168.1.0/24
+volumes:
+  db_data: {}

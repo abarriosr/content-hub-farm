@@ -9,9 +9,6 @@ RUN set -x \
     nginx \
     curl \
     bash \
-#    sqlite \
-#    git \
-#    openrc \
     mysql \
     mysql-client \
     php7 php7-fpm \
@@ -36,6 +33,7 @@ RUN set -x \
     php7-xmlwriter \
     php7-mysqlnd \
     php7-zlib \
+    php7-xdebug \
     build-base \
     wget \
     composer \
@@ -43,8 +41,6 @@ RUN set -x \
 #   openrc \
   && rm -rf /var/cache/apk/* \
   && mkdir /tmp/nginx \
-#  && mkdir -p /var/www/html \
-#  && chown -R nginx:nginx /var/www/ \
   && sed -i 's/memory_limit = .*/memory_limit = 768M/' /etc/php7/php.ini \
   && sed -i 's/post_max_size = .*/post_max_size = 50M/' /etc/php7/php.ini \
   && echo 'sendmail_path = "/bin/true"' >> /etc/php7/php.ini \
@@ -54,7 +50,7 @@ RUN set -x \
   && sed -i 's/^listen.allowed_clients/;listen.allowed_clients/' /etc/php7/php-fpm.conf
 
 # Adds Xdebug.
-RUN apk add php7-xdebug --repository http://dl-3.alpinelinux.org/alpine/edge/testing/
+#RUN apk add php7-xdebug --repository http://dl-3.alpinelinux.org/alpine/edge/testing/
 
 # Comment this line if we want to share the docker bus between containers.
 #RUN rc-update add docker boot

@@ -6,53 +6,72 @@ CONTENT_HUB_FARM=`basename "$(dirname "$SCRIPT_DIRECTORY")"`
 echo "-------------------------------------------------------------------"
 echo "Content Hub Farm Control Script"
 echo ""
-echo "Usage: \$./bin/chf <CONTAINER> <COMMAND> <COMMAND-ARGUMENTS>"
+echo "Usage:"
+echo " \$./bin/chf <COMMAND> <COMMAND-ARGUMENTS>"
+echo " \$./bin/chf <CONTAINER> <COMMAND> <COMMAND-ARGUMENTS>"
 echo ""
 echo "To list all available commands: \$./bin/chf list-commands"
 echo "-------------------------------------------------------------------"
 
 # List all available commands if 'list-commands' argument is provided.
 if [ "$1" == "list-commands" ]; then
-  echo "Available Commands:"
-  ls -1 ${SCRIPT_DIRECTORY}/commands | sed -e 's/\.sh$//' | sed -e 's/^/ * /'
+  echo "Available Internal Commands:"
+  ls -1 ${SCRIPT_DIRECTORY}/commands/internal | sed -e 's/\.sh$//' | sed -e 's/^/ * /'
+  echo "Available Commands in Container Scope:"
+  ls -1 ${SCRIPT_DIRECTORY}/commands/container | sed -e 's/\.sh$//' | sed -e 's/^/ * /'
   exit
 fi
 
-# Obtaining the list of available containers.
-list=`docker ps --filter name=${CONTENT_HUB_FARM} | tail -n +2 | awk '{print $NF}'`
+# Check whether this was an internal command or in the scope of a container.
+INTERNAL_COMMAND=false
+if [[ "$1" =~ ^(build|down|images|logs|pause|restart|start|stop|up)$ ]]; then
+  INTERNAL_COMMAND=true;
+fi
 
-# Checking if container is available.
-if [[ $list =~ (^|[[:space:]])"$1"($|[[:space:]]) ]] ; then
+if [ $INTERNAL_COMMAND == true ]; then
+  COMMAND="$1"
+  COMMAND_FILE=${SCRIPT_DIRECTORY}/commands/internal/${COMMAND}.sh
+else
+  CONTAINER="$1"
+  COMMAND="$2"
+  COMMAND_FILE=${SCRIPT_DIRECTORY}/commands/container/${COMMAND}.sh
+
+  # Obtaining the list of available containers.
+  list=`docker ps --filter name=${CONTENT_HUB_FARM} | tail -n +2 | awk '{print $NF}'`
+
+  # Checking if container is available.
+  if [[ $list =~ (^|[[:space:]])"$CONTAINER"($|[[:space:]]) ]] ; then
     echo "Executing command '$2' on container '$1'..."
   else
-    echo "Cannot connect to container '$1'. Plese use one of the following containers:"
+    echo "Cannot connect to container '$CONTAINER'. Plese use one of the following containers:"
     echo "$list" | sed -e 's/^/ * /'
+    echo ""
+    echo "You need to provide a command to execute. Some examples below:"
+    echo "For Internal Commands:"
+    echo ""
+    echo "\$./bin/chf up -d"
+    echo "\$./bin/chf start"
+    echo "\$./bin/chf stop"
+    echo "\$./bin/chf pause"
+    echo ""
+    echo "For Commands in the container scope:"
+    echo ""
+    echo "\$./bin/chf <container> enable_xdebug"
+    echo "\$./bin/chf <container> drush status"
     echo ""
     exit
   fi
-
-# Checks that we provided a command to execute.
-if [ -z "$2" ]
-  then
-    echo "You need to provide a command to execute. Some examples below:"
-    echo ""
-    echo "\$./bin/chf content-hub-farm_publisher_1 enable_xdebug"
-    echo "\$./bin/chf content-hub-farm_subscriber1_1 drush status"
-    echo ""
-    exit
 fi
 
-# Eliminating second argument to pass to command script.
+# Eliminating command argument to pass to command script.
 args=""
 for i in "$@" ; do
-  if [ "$i" != "$2" ]; then
+  if [ "$i" != "$COMMAND" ]; then
     args="${args} $i"
   fi
 done
 
-COMMAND="$2"
-COMMAND_FILE=${SCRIPT_DIRECTORY}/commands/${COMMAND}.sh
-
+# Execute command.
 if [ -f "$COMMAND_FILE" ]; then
   source ${COMMAND_FILE} $args
 else

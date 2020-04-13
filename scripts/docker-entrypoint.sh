@@ -11,6 +11,9 @@ DB_USER='db';
 DB_PASS='db';
 DB_HOST='database';
 DB_NAME=`echo ${HOSTNAME} | awk -F'.' '{print $1}'`
+
+# Use the hostname as database name. Create it if it does not exist yet.
+mysql -u${DB_USER} -p${DB_PASS} -h${DB_HOST} -s -N -e "CREATE DATABASE IF NOT EXISTS `${DB_NAME}`;"
 DB_URL="mysql://${DB_USER}:${DB_PASS}@${DB_HOST}:3306/${DB_NAME}"
 
 # If the site is not persistent then delete it and start over.
