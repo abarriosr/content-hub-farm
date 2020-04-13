@@ -49,9 +49,6 @@ RUN set -x \
   && sed -i '/^group/c \group = nginx' /etc/php7/php-fpm.conf \
   && sed -i 's/^listen.allowed_clients/;listen.allowed_clients/' /etc/php7/php-fpm.conf
 
-# Adds Xdebug.
-#RUN apk add php7-xdebug --repository http://dl-3.alpinelinux.org/alpine/edge/testing/
-
 # Comment this line if we want to share the docker bus between containers.
 #RUN rc-update add docker boot
 

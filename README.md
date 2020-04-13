@@ -63,8 +63,8 @@ doing any site configuration.
  
         $./bin/chf <COMMAND> <COMMAND-ARGUMENTS>  ; General format 
         
-        $./bin/chf up          ; Runs the farm.
-        $./bin/chf up -d       ; Runs the farm in detached mode. Containers run in the background
+        $./bin/chf up          ; Runs the farm. Create and start containers.
+        $./bin/chf up -d       ; Runs the farm in detached mode. Containers run in the background.
         $./bin/chf start       ; Start services.
         $./bin/chf stop        ; Stop services.
         $./bin/chf restart     ; Restart services.
@@ -114,7 +114,7 @@ lines:
         environment:
           # There are two sites roles: 'publisher' or 'subscriber'.
           - SITE_ROLE=subscriber
-          # If persistent, the site will persist through `docker compose up`
+          # If persistent, the site will persist through `./bin/chf up`
           # Otherwise, the site will be re-installed.
           - PERSISTENT=true
           # The Drupal profile you wish to install (defaults to "standard")  
