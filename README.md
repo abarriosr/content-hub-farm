@@ -27,6 +27,18 @@ doing any site configuration.
         $cp docker-compose.yml.dist docker-compose.yml
         
   Add Content Hub Credentials to the **database** service.      
+  
+  - **Note:** If you want to enable NFS mounts, execute the following instead:
+  
+        $cp docker-compose.yml.nfs_enabled.dist docker-compose.yml
+        $./bin/chf enable_nfs_mount          ; Enables NFS mounts.
+        
+    Then, edit the docker-composer.yml, search for the key below and replace the value to match your system's. 
+    
+        device: ":/System/Volumes/Data/Users/<YOUR_USER>/Sites/content-hub-farm/html"
+    
+    You would normally always want to do do this because there are a lot of performance gains
+    when accessing an NFS mounted volume instead of using the native docker mount.     
 
 - Build the containers
 

@@ -34,7 +34,11 @@ services:
       - XDEBUG_CONFIG=remote_port=9000 remote_autostart=1
       - PHP_INI_XDEBUG_REMOTE_PORT=9000
     volumes:
-      - ./html:/var/www/html
+      - type: volume
+        source: nfsmount
+        target: /var/www/html
+        volume:
+          nocopy: true
     ports:
       - 8081:80
     networks:
@@ -55,7 +59,11 @@ services:
       - XDEBUG_CONFIG=remote_port=9000 remote_autostart=1
       - PHP_INI_XDEBUG_REMOTE_PORT=9000
     volumes:
-      - ./html:/var/www/html
+      - type: volume
+        source: nfsmount
+        target: /var/www/html
+        volume:
+          nocopy: true
     ports:
       - 8082:80
     networks:
@@ -70,3 +78,10 @@ networks:
 volumes:
   db_data:
     name: "content-hub-farm-database"
+  nfsmount:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=host.docker.internal,hard,nolock,rw"
+      # Change this to reflect your system directory.
+      device: ":/System/Volumes/Data/Users/<YOUR_USER>/Sites/content-hub-farm/html"

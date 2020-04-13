@@ -24,7 +24,7 @@ fi
 
 # Check whether this was an internal command or in the scope of a container.
 INTERNAL_COMMAND=false
-if [[ "$1" =~ ^(build|down|images|logs|pause|restart|start|stop|up)$ ]]; then
+if [[ "$1" =~ ^(build|down|enable_nfs_mount|images|logs|pause|restart|start|stop|up)$ ]]; then
   INTERNAL_COMMAND=true;
 fi
 

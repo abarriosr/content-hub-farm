@@ -29,10 +29,9 @@ if [ -f "$FILE" ]; then
   echo "Site ${HOSTNAME} is already installed."
 else
   echo "Installing Drupal for site ${HOSTNAME}."
-  # Give everything back to nginx user
   mkdir /var/www/html/web/sites/${HOSTNAME}
   chmod -R 777 /var/www/html/web/sites/${HOSTNAME}
-  chown -R nginx:nginx /var/www/html/web/sites/${HOSTNAME}
+  # chown -R nginx:nginx /var/www/html/web/sites/${HOSTNAME}
 
   cd /var/www/html/web || return;
   mkdir -p ./sites/${HOSTNAME}/files
