@@ -74,7 +74,7 @@ doing any site configuration.
         $./bin/chf stop        ; Stop services.
         $./bin/chf restart     ; Restart services.
         $./bin/chf pause       ; Pause services.
-        $./bin/chf ssh         ; Opens a bash terminal inside the container.
+        $./bin/chf sh          ; Opens a bash terminal inside the container.
         $./bin/chf logs        ; View output logs from containers
         $./bin/chf down        ; Stop and remove containers and networks.
         $./bin/chf down -v     ; Stop and remove all above plus volumes. If used, It invalidates the persistent feature in sites.
@@ -89,14 +89,14 @@ doing any site configuration.
   Use this command every time you need to interact with the farm.
   For more instructions on how to use it, you can list all commands. 
  
-         $./bin/chf list-commands   ; lists all available commands.
+         $./bin/chf list-commands   ; Lists all available commands.
          
   Use this script to enable/disable Xdebug, execute drush commands, etc.    
  
   - **NOTE:**
   
-    For the moment (Until I fix the ENTRYPOINT ;-) execute the following command after creating and running the farm 
-    to install the site:
+    For the moment (Until I fix the ENTRYPOINT ;-) execute the following command in each container after creating and 
+    running the farm to install the sites:
   
             $./bin/chf <container> exec docker-entrypoint.sh
             
@@ -108,7 +108,7 @@ doing any site configuration.
 ## Adding more publishers/subscribers:
 
 To add more sites just add entries to the **docker-compose.yml** and **ngrok.yml** files. 
-Those entries have to paired together. Then run the Content Hub Farm as explained above.
+Those entries have to be paired together. Then run the Content Hub Farm as explained above.
 
 - Add entries into the docker-compose.yml file. For example, a second subscriber could be done by adding the following 
 lines:

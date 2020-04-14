@@ -5,8 +5,7 @@
 
 file=`basename "$0"`
 sql="/docker-entrypoint-initdb.d/${file}.sql"
-rm -f $sql
-touch $sql
+rm -f $sql; touch $sql
 
 # Create databases passed in the $MYSQL_DATABASES environment variable.
 DATABASES=`echo $MYSQL_DATABASES | awk -F, '{for(i=1;i<=NF;i++) print $i}'`
