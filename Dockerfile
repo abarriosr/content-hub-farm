@@ -11,6 +11,7 @@ RUN set -x \
     bash \
     mysql \
     mysql-client \
+    ncurses \
     php7 php7-fpm \
     php7-ctype \
     php7-curl \
@@ -54,6 +55,10 @@ RUN set -x \
 
 # Configure nginx
 COPY config/nginx.conf /etc/nginx/nginx.conf
+
+# Fancy prompt.
+RUN echo "COLOR=2; if [ \$SITE_ROLE == 'subscriber' ]; then COLOR=3; fi" >> /root/.bashrc
+RUN echo "PS1=\"\[\$(tput setaf \$COLOR)\$(tput bold)[\]chf@\\h$:\\w]#\[\$(tput sgr0) \]\"" >> /root/.bashrc
 
 # Configure PHP-FPM
 RUN mkdir /etc/php7/custom.d

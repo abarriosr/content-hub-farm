@@ -63,14 +63,15 @@ doing any site configuration.
  
         $./bin/chf <COMMAND> <COMMAND-ARGUMENTS>  ; General format 
         
-        $./bin/chf up          ; Runs the farm. Create and start containers.
-        $./bin/chf up -d       ; Runs the farm in detached mode. Containers run in the background.
+        $./bin/chf build       ; Build or rebuild services.
+        $./bin/chf up          ; Create and start containers.
+        $./bin/chf up -d       ; As above in detached mode. This is normally what you want to use after build.
         $./bin/chf start       ; Start services.
         $./bin/chf stop        ; Stop services.
         $./bin/chf restart     ; Restart services.
         $./bin/chf pause       ; Pause services.
+        $./bin/chf ssh         ; Opens a bash terminal inside the container.
         $./bin/chf logs        ; View output logs from containers
-        $./bin/chf build       ; Build or rebuild services.
         $./bin/chf down        ; Stop and remove containers and networks.
         $./bin/chf down -v     ; Stop and remove all above plus volumes. If used, It invalidates the persistent feature in sites.
 
@@ -90,10 +91,15 @@ doing any site configuration.
  
   - **NOTE:**
   
-    For the moment (Until I fix the ENTRYPOINT ;-) execute the following command after creating and running the container (from 
-    inside the container) to install the site:
+    For the moment (Until I fix the ENTRYPOINT ;-) execute the following command after creating and running the farm 
+    to install the site:
   
-            $docker-entrypoint.sh
+            $./bin/chf <container> exec docker-entrypoint.sh
+            
+- Visit your new sites 
+            
+            $./bin/chf <container> url       ; Opens the site URL in a browser.
+            $./bin/chf <container> sh        ; Opens a terminal to the container.
         
 ## Adding more publishers/subscribers:
 

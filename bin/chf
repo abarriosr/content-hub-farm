@@ -53,6 +53,7 @@ else
     echo "\$./bin/chf start    ; Starts services."
     echo "\$./bin/chf stop     ; Stops services."
     echo "\$./bin/chf pause    ; Pause services."
+    echo "\$./bin/chf sh       ; Opens a terminal to the container."
     echo ""
     echo "For Commands in the container scope:"
     echo ""
