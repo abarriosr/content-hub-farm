@@ -41,7 +41,11 @@ else
 
   # Checking if container is available.
   if [[ $list =~ (^|[[:space:]])"$CONTAINER"($|[[:space:]]) ]] ; then
-    echo "Executing command '$2' on container '$1'..."
+    if [[ -z "$CONTAINER" && -z "$COMMAND" ]]; then
+      echo "Services are not running..."
+    else
+      echo "Executing command '$2' on container '$1'..."
+    fi
   else
     echo "Cannot connect to container '$CONTAINER'. Plese use one of the following containers:"
     echo "$list" | sed -e 's/^/ * /'
@@ -76,6 +80,16 @@ done
 if [ -f "$COMMAND_FILE" ]; then
   source ${COMMAND_FILE} $args
 else
-  echo "The command ${COMMAND} is not implemented."
+  if [[ -z "$CONTAINER" && -z "$COMMAND" ]]; then
+    echo ""
+    echo "To create and start services:"
+    echo "       ./bin/chf up -d"
+    echo ""
+    echo "To start services, if containers are already built:"
+    echo "       ./bin/chf start"
+    echo ""
+  else
+    echo "The command '${COMMAND}' is not implemented."
+  fi
 fi
 

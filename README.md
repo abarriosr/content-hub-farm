@@ -42,9 +42,13 @@ doing any site configuration.
 
 - Build the containers
 
-        $./built.sh <ACH-BRANCH>
+        $./built.sh
         
-  If no argument is provided, it will build using this default branch for Content Hub module: **8.x-2.x**. 
+  If no arguments are provided, it will build using **drupal/acquia_contenthub:~2** from the Drupal Public repository. 
+  To build using Acquia Content Hub's private repository: 
+  
+        $./built.sh <ACH-BRANCH> private
+        
   Use this command every time you need to rebuild your sites' codebase.
 
 - Download and install [Ngrok](https://ngrok.com). You will need a paid version if you want to use multiple domains.
