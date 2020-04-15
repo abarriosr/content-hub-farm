@@ -33,7 +33,7 @@ else
   echo "Registering site to Content Hub using following credentials:"
   echo "API_KEY=$API_KEY, SECRET_KEY=$SECRET_KEY, HOSTNAME=$HOSTNAME, CLIENT_NAME=$ACH_CLIENT_NAME."
   $DRUSH ach-connect --hostname=$HOSTNAME --api_key=$API_KEY --secret_key=$SECRET_KEY --client_name=$ACH_CLIENT_NAME -y
-  echo "Registering webhook."
-  $DRUSH acquia:contenthub-webhooks register
+#  echo "Registering webhook."
+#  $DRUSH acquia:contenthub-webhooks register
   echo "Done."
 fi

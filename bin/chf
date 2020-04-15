@@ -24,7 +24,9 @@ fi
 
 # Check whether this was an internal command or in the scope of a container.
 INTERNAL_COMMAND=false
-if [[ "$1" =~ ^(build|down|enable_nfs_mount|images|logs|pause|restart|start|stop|up)$ ]]; then
+INTERNAL_COMMAND_LIST=`ls -1 ${SCRIPT_DIRECTORY}/commands/internal | sed -e 's/\.sh$//' | sed -e 'H;${x;s/\n/|/g;s/^,//;p;};d'`
+if [[ "$1" =~ ^(echo ${INTERNAL_COMMAND_LIST})$ ]]; then
+#if [[ "$1" =~ ^(build|down|enable_nfs_mount|images|logs|pause|restart|start|stop|up)$ ]]; then
   INTERNAL_COMMAND=true;
 fi
 
@@ -61,8 +63,8 @@ else
     echo ""
     echo "For Commands in the container scope:"
     echo ""
-    echo "\$./bin/chf <container> enable_xdebug  ; Enables Xdebug in the container."
-    echo "\$./bin/chf <container> drush status   ; Executes drush commands in the container."
+    echo "\$./bin/chf <container> enable_xdebug     ; Enables Xdebug in the container."
+    echo "\$./bin/chf <container> drush <arguments> ; Executes drush commands in the container."
     echo ""
     exit
   fi
