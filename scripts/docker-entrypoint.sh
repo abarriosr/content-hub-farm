@@ -10,7 +10,7 @@ site_mail="test@test.com"
 DB_USER='db';
 DB_PASS='db';
 DB_HOST='database';
-DB_NAME=`echo ${HOSTNAME} | awk -F'.' '{print $1}'`
+DB_NAME=`echo ${HOSTNAME//[-._]} | awk -F'.' '{print $1}'`
 
 # Use the hostname as database name. Create it if it does not exist yet.
 mysql -u${DB_USER} -p${DB_PASS} -h${DB_HOST} -s -N -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};"
