@@ -26,7 +26,6 @@ fi
 INTERNAL_COMMAND=false
 INTERNAL_COMMAND_LIST=`ls -1 ${SCRIPT_DIRECTORY}/commands/internal | sed -e 's/\.sh$//' | sed -e 'H;${x;s/\n/|/g;s/^,//;p;};d'`
 if [[ "$1" =~ ^(echo ${INTERNAL_COMMAND_LIST})$ ]]; then
-#if [[ "$1" =~ ^(build|down|enable_nfs_mount|images|logs|pause|restart|start|stop|up)$ ]]; then
   INTERNAL_COMMAND=true;
 fi
 
