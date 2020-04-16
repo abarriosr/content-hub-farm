@@ -25,7 +25,7 @@ echo "You can provide a Content Hub branch as an argument (8.x-2.x):"
 echo "By default, it will build Acquia Content Hub using Drupal public repository."
 echo "To build from Acquia's private repository, use:"
 echo ""
-echo "    $./build.sh LCH-XXXX private"
+echo "    $./bin/chf build_code LCH-XXXX private"
 echo "---------------------------------------------------"
 if [ -d "$DOCROOT" ]; then
   echo "Cleaning up existing directory $DOCROOT"
