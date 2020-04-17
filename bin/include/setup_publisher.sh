@@ -16,7 +16,7 @@ while : ; do
   read -p "Insert your Hostname (publisher${COUNT}.ngrok.io): " CONFIG_PUB_HOSTNAME[$COUNT]
   read -p "Insert your Acquia Content Client Name: " CONFIG_PUB_ACH_CLIENT_NAME[$COUNT]
   echo "The following are Environmental variables used for PHP Debugging."
-  echo "If you are unsure about the values, just leave them blank and we will use default values."
+  echo "If you are unsure about the values, just leave them blank and we will do our best guess to set defaults."
   echo "You can always change them later."
   read -p "PHP_IDE_CONFIG: " CONFIG_PUB_PHP_IDE_CONFIG[$COUNT]
   read -p "XDEBUG_CONFIG: " CONFIG_PUB_XDEBUG_CONFIG[$COUNT]

@@ -10,6 +10,8 @@ CONTENT_HUB_FARM_DIRECTORY=`dirname "$(dirname "$(dirname "$SCRIPT_DIRECTORY")")
 
 # @TODO: Check if there is codebase in the 'html' directory. If so, ask to delete it.
 
+# @TODO: Add default values to configuration variables.
+
 echo "Configuration Setup for Content Hub Farm"
 echo "----------------------------------------"
 echo ""
@@ -41,7 +43,7 @@ echo ""
 # Number of Publishers/Subscribers.
 echo "Number of Publishers / Subscribers."
 while : ; do
-  echo "We recomment a maximum of 3 publishers and 3 subscribers."
+  echo "We recommend a maximum of 3 publishers and 3 subscribers."
   read -p "How many publishers? (1) " CONFIG_NUM_PUBLISHERS
   read -p "How many subscribers? (1) " CONFIG_NUM_SUBSCRIBERS
   [[ -z "${CONFIG_NUM_PUBLISHERS##*[!1-9]*}" || -z "${CONFIG_NUM_SUBSCRIBERS##*[!1-9]*}" ]] || break
@@ -68,14 +70,15 @@ do
   echo ""
 done
 
+# Volume Device Path.
+echo "# Volume basepath and Ngrok Token." >> ${SETUP_FILE}
+echo "CONFIG_VOLUME_DEVICE_PATH=$CONTENT_HUB_FARM_DIRECTORY" >> ${SETUP_FILE}
+
 # Ngrok Token.
 echo "Please Provide your Ngrok Token. You can obtain it from https://dashboard.ngrok.com/auth."
 read -p "Ngrok token: " CONFIG_NGROK_TOKEN
-echo "CONFIG_NGROK_TOKEN=${CONFIG_NGROK_TOKEN};" >> ${SETUP_FILE}
+echo "CONFIG_NGROK_TOKEN=\"${CONFIG_NGROK_TOKEN}\";" >> ${SETUP_FILE}
 echo ""
-
-# Volume Device Path.
-echo "CONF_VOLUME_DEVICE_PATH=$CONTENT_HUB_FARM_DIRECTORY" >> ${SETUP_FILE}
 
 echo "Configuration Options saved in './bin/include/setup_options.sh'."
 echo "Creating docker-compose.yml file."
@@ -88,6 +91,7 @@ fi
 sh ${CONTENT_HUB_FARM_DIRECTORY}/bin/templates/docker-compose.sh $TEMPLATE
 
 # Creating ngrok.yml.
+sh ${CONTENT_HUB_FARM_DIRECTORY}/bin/templates/ngrok.sh
 
 
 echo "Finished Setup."

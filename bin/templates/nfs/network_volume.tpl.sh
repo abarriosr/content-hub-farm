@@ -20,5 +20,5 @@ volumes:
     driver_opts:
       type: "nfs"
       o: "addr=host.docker.internal,hard,nolock,rw"
-      device: ":/System/Volumes/Data/$CONF_VOLUME_DEVICE_PATH/html"
+      device: ":/System/Volumes/Data/${CONFIG_VOLUME_DEVICE_PATH}/html"
 EOF
