@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Loading Setup Configuration.
-./setup_options.sh
+SCRIPT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source $SCRIPT_DIRECTORY/../../include/setup_options.sh
 
 cat  << EOF
 

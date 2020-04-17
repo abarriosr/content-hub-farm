@@ -6,12 +6,9 @@ SETUP_FILE="${SCRIPT_DIRECTORY}/setup_options.sh"
 # Content Hub Questionaire Setup.
 echo "Content Hub Credentials"
 while : ; do
-  echo "Insert your Acquia Content Hub API Key:"
-  read CONFIG_ACH_API_KEY
-  echo "Insert your Acquia Content Hub Secret Key:"
-  read CONFIG_ACH_SECRET_KEY
-  echo "Insert your Acquia Content Hub Hostname:"
-  read CONFIG_ACH_HOSTNAME
+  read -p "Insert your Acquia Content Hub API Key: " CONFIG_ACH_API_KEY
+  read -p "Insert your Acquia Content Hub Secret Key: " CONFIG_ACH_SECRET_KEY
+  read -p "Insert your Acquia Content Hub Hostname: " CONFIG_ACH_HOSTNAME
   echo "Are the following values correct:"
   echo "  - Content Hub API Key = ${CONFIG_ACH_API_KEY}"
   echo "  - Content Hub Secret Key = ${CONFIG_ACH_SECRET_KEY}"

@@ -1,12 +1,15 @@
 #!/bin/bash
 
 # Loading Setup Configuration.
-./setup_options.sh
+SCRIPT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source $SCRIPT_DIRECTORY/../../include/setup_options.sh
 
+# Publisher Template.
+for (( COUNT=1; COUNT<=${CONFIG_NUM_PUBLISHERS}; COUNT++ )); do
 cat  << EOF
 
   publisher$COUNT:
-    hostname: ${CONF_PUBLISHER_HOSTNAME[$COUNT]}
+    hostname: ${CONFIG_PUB_HOSTNAME[$COUNT]}
     build:
       context: .
     depends_on:
@@ -14,10 +17,10 @@ cat  << EOF
     environment:
       - SITE_ROLE=publisher
       - PERSISTENT=true
-      - ACH_CLIENT_NAME=publisher$COUNT-docker
-      - PHP_IDE_CONFIG=${CONF_PUBLISHER_PHP_IDE_CONFIG[$COUNT]}
-      - XDEBUG_CONFIG=${CONF_PUBLISHER_XDEBUG_CONFIG[$COUNT]}
-      - PHP_INI_XDEBUG_REMOTE_PORT=${CONF_PHP_INI_XDEBUG_REMOTE_PORT[$COUNT]}
+      - ACH_CLIENT_NAME=${CONFIG_PUB_ACH_CLIENT_NAME[$COUNT]}
+      - PHP_IDE_CONFIG=${CONFIG_PUB_PHP_IDE_CONFIG[$COUNT]}
+      - XDEBUG_CONFIG=${CONFIG_PUB_XDEBUG_CONFIG[$COUNT]}
+      - PHP_INI_XDEBUG_REMOTE_PORT=${CONFIG_PUB_PHP_INI_XDEBUG_REMOTE_PORT[$COUNT]}
     volumes:
       - type: volume
         source: nfsmount
@@ -25,8 +28,9 @@ cat  << EOF
         volume:
           nocopy: true
     ports:
-      - 8081:80
+      - ${CONFIG_PUB_BINDING_PORT[${COUNT}]}:80
     networks:
       ch_farm:
-        ipv4_address: 192.168.1.10
+        ipv4_address: ${CONFIG_PUB_IP_ADDRESS[${COUNT}]}
 EOF
+done

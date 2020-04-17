@@ -1,12 +1,15 @@
 #!/bin/bash
 
 # Loading Setup Configuration.
-./setup_options.sh
+SCRIPT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source $SCRIPT_DIRECTORY/../../include/setup_options.sh
 
+# Subscriber Template.
+for (( COUNT=1; COUNT<=${CONFIG_NUM_SUBSCRIBERS}; COUNT++ )); do
 cat  << EOF
 
   subscriber$COUNT:
-    hostname: ${CONF_SUBSCRIBER_CONFIG[$COUNT]}
+    hostname: ${CONFIG_SUB_HOSTNAME[$COUNT]}
     build:
       context: .
     depends_on:
@@ -14,15 +17,16 @@ cat  << EOF
     environment:
       - SITE_ROLE=subscriber
       - PERSISTENT=true
-      - ACH_CLIENT_NAME=subscriber$COUNT-docker
-      - PHP_IDE_CONFIG=${CONF_SUBSCRIBER_PHP_IDE_CONFIG[$COUNT]}
-      - XDEBUG_CONFIG=remote_port=9000 remote_autostart=1
-      - PHP_INI_XDEBUG_REMOTE_PORT=9000
+      - ACH_CLIENT_NAME=${CONFIG_SUB_ACH_CLIENT_NAME[$COUNT]}
+      - PHP_IDE_CONFIG=${CONFIG_SUB_PHP_IDE_CONFIG[$COUNT]}
+      - XDEBUG_CONFIG=${CONFIG_SUB_XDEBUG_CONFIG[$COUNT]}
+      - PHP_INI_XDEBUG_REMOTE_PORT=${CONFIG_SUB_PHP_INI_XDEBUG_REMOTE_PORT[$COUNT]}
     volumes:
       - ./html:/var/www/html
     ports:
-      - 8082:80
+      - ${CONFIG_SUB_BINDING_PORT[${COUNT}]}:80
     networks:
       ch_farm:
-        ipv4_address: 192.168.1.11
+        ipv4_address: ${CONFIG_SUB_IP_ADDRESS[${COUNT}]}
 EOF
+done

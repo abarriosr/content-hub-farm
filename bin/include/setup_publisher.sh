@@ -12,18 +12,15 @@ CONFIG_PUB_IP_ADDRESS[${COUNT}]="192.168.1.${IP}"
 # Publisher Questionaire Setup.
 echo "Publisher${COUNT} Configuration."
 while : ; do
-  echo "Insert your Hostname (publisher${COUNT}.ngrok.io):"
-  echo "This same hostname will be used as your ngrok domain."
-  read CONFIG_PUB_HOSTNAME[$COUNT]
-  echo "Insert your Acquia Content Client Name:"
-  read CONFIG_PUB_ACH_CLIENT_NAME[$COUNT]
-  echo "The following are PHP Debugging environment variables."
-  echo "PHP_IDE_CONFIG:"
-  read CONFIG_PUB_PHP_IDE_CONFIG[$COUNT]
-  echo "XDEBUG_CONFIG:"
-  read CONFIG_PUB_XDEBUG_CONFIG[$COUNT]
-  echo "PHP_INI_XDEBUG_REMOTE_PORT:"
-  read CONFIG_PUB_PHP_INI_XDEBUG_REMOTE_PORT[$COUNT]
+  echo "Your hostname will be used as your public ngrok domain."
+  read -p "Insert your Hostname (publisher${COUNT}.ngrok.io): " CONFIG_PUB_HOSTNAME[$COUNT]
+  read -p "Insert your Acquia Content Client Name: " CONFIG_PUB_ACH_CLIENT_NAME[$COUNT]
+  echo "The following are Environmental variables used for PHP Debugging."
+  echo "If you are unsure about the values, just leave them blank and we will use default values."
+  echo "You can always change them later."
+  read -p "PHP_IDE_CONFIG: " CONFIG_PUB_PHP_IDE_CONFIG[$COUNT]
+  read -p "XDEBUG_CONFIG: " CONFIG_PUB_XDEBUG_CONFIG[$COUNT]
+  read -p "PHP_INI_XDEBUG_REMOTE_PORT: " CONFIG_PUB_PHP_INI_XDEBUG_REMOTE_PORT[$COUNT]
 
   # Asking for verification.
   echo "Are the following values correct:"
