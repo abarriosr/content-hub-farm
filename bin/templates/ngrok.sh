@@ -2,11 +2,19 @@
 
 # Loading Setup Configuration.
 SCRIPT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-NGROK_YML=${SCRIPT_DIRECTORY}/../../ngrok.yml
+NGROK_YML=${HOME}/.ngrok2/ngrok.yml
 
-# @TODO: Detect existent ~/.ngrok2/ngrok.yml, print it... back it up and proceed to replace it.
+# Detect existing ~/.ngrok2/ngrok.yml, and if so back it up and proceed to replace it.
+if [ -f $NGROK_YML ]; then
+  NGROK_YML_BACK="`dirname "${NGROK_YML}"`/ngrok"
+  num=`ls ${NGROK_YML_BACK}* | wc -l | xargs`
+  NGROK_YML_BACK=$NGROK_YML_BACK${num}.yml
+  # Backing up existent ngrok.yml.
+  echo "Backing up existing ~/.ngrok2/ngrok.yml to ngrok${num}.yml"
+  mv $NGROK_YML $NGROK_YML_BACK
+fi
+
 echo "" > ${NGROK_YML}
-
 source $SCRIPT_DIRECTORY/../include/setup_options.sh
 echo "authtoken: $CONFIG_NGROK_TOKEN" >> ${NGROK_YML}
 echo "tunnels:" >> ${NGROK_YML}
