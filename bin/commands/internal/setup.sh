@@ -123,7 +123,7 @@ echo "CONFIG_BUILD_CODE_SOURCE=\"${CONFIG_BUILD_CODE_SOURCE}\";" >> ${SETUP_FILE
 echo "CONFIG_BUILD_CODE_BRANCH=\"${CONFIG_BUILD_CODE_BRANCH}\";" >> ${SETUP_FILE}
 echo ""
 
-echo "Configuration Options saved in 'setup_options.sh'."
+echo "Configuration Options saved in './setup_options.sh'."
 echo "Creating docker-compose.yml file."
 
 # Creating docker-compose.yml.
