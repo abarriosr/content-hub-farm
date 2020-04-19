@@ -22,7 +22,7 @@ docker-compose down -v
 pkill -9 ngrok
 
 # Starting installation.
-cd $SCRIPT_DIRECTORY/../../../
+cd $SCRIPT_DIRECTORY/../../../ || return
 
 # Setting up Configuration file setup_options.sh
 sh $SCRIPT_DIRECTORY/setup.sh

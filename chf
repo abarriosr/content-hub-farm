@@ -1,7 +1,6 @@
 #!/bin/bash
 
 SCRIPT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-CONTENT_HUB_FARM=`basename "$(dirname "$SCRIPT_DIRECTORY")"`
 
 echo "-------------------------------------------------------------------"
 echo "Content Hub Farm Control Script"
@@ -16,26 +15,26 @@ echo "-------------------------------------------------------------------"
 # List all available commands if 'list-commands' argument is provided.
 if [ "$1" == "list-commands" ]; then
   echo "Available Internal Commands:"
-  ls -1 ${SCRIPT_DIRECTORY}/commands/internal | sed -e 's/\.sh$//' | sed -e 's/^/ * /'
+  ls -1 ${SCRIPT_DIRECTORY}/bin/commands/internal | sed -e 's/\.sh$//' | sed -e 's/^/ * /'
   echo "Available Commands in Container Scope:"
-  ls -1 ${SCRIPT_DIRECTORY}/commands/container | sed -e 's/\.sh$//' | sed -e 's/^/ * /'
+  ls -1 ${SCRIPT_DIRECTORY}/bin/commands/container | sed -e 's/\.sh$//' | sed -e 's/^/ * /'
   exit
 fi
 
 # Check whether this was an internal command or in the scope of a container.
 INTERNAL_COMMAND=false
-INTERNAL_COMMAND_LIST=`ls -1 ${SCRIPT_DIRECTORY}/commands/internal | sed -e 's/\.sh$//' | sed -e 'H;${x;s/\n/|/g;s/^,//;p;};d'`
+INTERNAL_COMMAND_LIST=`ls -1 ${SCRIPT_DIRECTORY}/bin/commands/internal | sed -e 's/\.sh$//' | sed -e 'H;${x;s/\n/|/g;s/^,//;p;};d'`
 if [[ "$1" =~ ^(echo ${INTERNAL_COMMAND_LIST})$ ]]; then
   INTERNAL_COMMAND=true;
 fi
 
 if [ $INTERNAL_COMMAND == true ]; then
   COMMAND="$1"
-  COMMAND_FILE=${SCRIPT_DIRECTORY}/commands/internal/${COMMAND}.sh
+  COMMAND_FILE=${SCRIPT_DIRECTORY}/bin/commands/internal/${COMMAND}.sh
 else
   CONTAINER="$1"
   COMMAND="$2"
-  COMMAND_FILE=${SCRIPT_DIRECTORY}/commands/container/${COMMAND}.sh
+  COMMAND_FILE=${SCRIPT_DIRECTORY}/bin/commands/container/${COMMAND}.sh
 
   # Obtaining the list of available containers.
   list=`docker-compose images | sed -n '1,2!p' | cut -f 1 -d ' ' | awk '{print $NF}'`
@@ -54,16 +53,18 @@ else
     echo "You need to provide a command to execute. Some examples below:"
     echo "For Internal Commands:"
     echo ""
-    echo "\$./bin/chf up -d    ; Creates and starts containers in detached mode."
-    echo "\$./bin/chf start    ; Starts services."
-    echo "\$./bin/chf stop     ; Stops services."
-    echo "\$./bin/chf pause    ; Pause services."
-    echo "\$./bin/chf sh       ; Opens a terminal to the container."
+    echo "\$./chf go       ; Full Setup and installation"
+    echo "\$./chf setup    ; Sets up the environment and creates configuration files."
+    echo "\$./chf up       ; Creates and starts containers."
+    echo "\$./chf start    ; Starts services."
+    echo "\$./chf stop     ; Stops services."
+    echo "\$./chf pause    ; Pause services."
+    echo "\$./chf sh       ; Opens a terminal to the container."
     echo ""
     echo "For Commands in the container scope:"
     echo ""
-    echo "\$./bin/chf <container> enable_xdebug     ; Enables Xdebug in the container."
-    echo "\$./bin/chf <container> drush <arguments> ; Executes drush commands in the container."
+    echo "\$./chf <container> enable_xdebug     ; Enables Xdebug in the container."
+    echo "\$./chf <container> drush <arguments> ; Executes drush commands in the container."
     echo ""
     exit
   fi
@@ -84,10 +85,10 @@ else
   if [[ -z "$CONTAINER" && -z "$COMMAND" ]]; then
     echo ""
     echo "To create and start services:"
-    echo "       ./bin/chf up -d"
+    echo "       ./chf up"
     echo ""
     echo "To start services, if containers are already built:"
-    echo "       ./bin/chf start"
+    echo "       ./chf start"
     echo ""
   else
     echo "The command '${COMMAND}' is not implemented."
