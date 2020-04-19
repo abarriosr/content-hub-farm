@@ -16,10 +16,14 @@ if [[ ! $line =~ ^[yY]$ ]] ; then
 fi
 
 # Stopping containers
+echo "Stopping running containers and removing them all including volumes..."
 docker-compose down -v
+echo "Done."
 
 # Stopping ngrok service.
+echo "Killing Ngrok Service..."
 pkill -9 ngrok
+echo "Done."
 
 # Starting installation.
 cd $SCRIPT_DIRECTORY/../../../ || return
@@ -32,9 +36,9 @@ source $SCRIPT_DIRECTORY/../../include/setup_options.sh
 
 # Building Source code.
 if [ "${CONFIG_BUILD_CODE_SOURCE}" == 'public' ] ; then
-  sh $SCRIPT_DIRECTORY/build_code
+  sh $SCRIPT_DIRECTORY/build_code.sh
 else
-  sh $SCRIPT_DIRECTORY/build_code ${CONFIG_BUILD_CODE_BRANCH} ${CONFIG_BUILD_CODE_SOURCE}
+  sh $SCRIPT_DIRECTORY/build_code.sh ${CONFIG_BUILD_CODE_BRANCH} ${CONFIG_BUILD_CODE_SOURCE}
 fi
 
 # Starting ngrok service.

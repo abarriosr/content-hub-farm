@@ -1,17 +1,23 @@
 #!/bin/bash
 
+SCRIPT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 # Capture all runnning containers.
 database_container=`docker-compose images | sed -n '1,2!p' | cut -f 1 -d ' ' | grep -e database`
 containers=`docker-compose images | sed -n '1,2!p' | cut -f 1 -d ' ' | grep -v database`
 
+if [ -z "$containers" ] ; then
+  echo "You need to create the containers first. Execute './chf up'"
+  exit;
+fi
+
 # Wait until MySQL is running to start installation.
 # Do not start installation until database service is running.
 echo "Waiting for database in container \"${database_container}\" to become active..."
-while [ "$(docker inspect --format "{{json .State.Status }}" ${database_container})" != "\"running\"" ]; do
-  echo ".";
-  sleep 1;
+while ! docker exec ${database_container} mysql --user=db --password=db --host "127.0.0.1" -e 'status' &> /dev/null ; do
+    echo "Waiting for database connection..."
+    sleep 2
 done
-sleep 2;
 echo "Database service active, starting Site installation."
 
 # Separating list of containers in lists of 3 containers to be processed in parallel.
@@ -44,4 +50,23 @@ for ((i=0; i<=$limit; i++)) {
 
 # Finished installation.
 echo "Environment is ready."
+
+# Loading Site Configuration.
+if [ -f "${SCRIPT_DIRECTORY}/setup_options.sh" ] ;  then
+  # shellcheck source=./setup_options.sh
+  source $SCRIPT_DIRECTORY/setup_options.sh
+  echo "Publishers:"
+  for site in "${CONFIG_PUB_HOSTNAME[@]}"
+  do
+    echo "  * http://${site}"
+  done
+  echo ""
+  echo "Subscribers:"
+  for site in "${CONFIG_SUB_HOSTNAME[@]}"
+  do
+    echo "  * http://${site}"
+  done
+  echo ""
+fi
+
 

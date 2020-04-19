@@ -19,9 +19,9 @@ source $SCRIPT_DIRECTORY/../include/setup_options.sh
 echo "authtoken: $CONFIG_NGROK_TOKEN" >> ${NGROK_YML}
 echo "tunnels:" >> ${NGROK_YML}
 
-for (( i=1; i<=${CONFIG_NUM_PUBLISHERS}; i++ ))
+for (( COUNT=1; COUNT<=${CONFIG_NUM_PUBLISHERS}; COUNT++ ))
 do
-  echo "  publisher$i:" >> ${NGROK_YML}
+  echo "  publisher$COUNT:" >> ${NGROK_YML}
   echo "    proto: \"http\"" >> ${NGROK_YML}
   echo "    addr: \"${CONFIG_PUB_BINDING_PORT[${COUNT}]}\"" >> ${NGROK_YML}
   echo "    hostname: ${CONFIG_PUB_HOSTNAME[${COUNT}]}" >> ${NGROK_YML}
@@ -29,9 +29,9 @@ do
   echo ""
 done
 
-for (( i=1; i<=${CONFIG_NUM_SUBSCRIBERS}; i++ ))
+for (( COUNT=1; COUNT<=${CONFIG_NUM_SUBSCRIBERS}; COUNT++ ))
 do
-  echo "  subscriber$i:" >> ${NGROK_YML}
+  echo "  subscriber$COUNT:" >> ${NGROK_YML}
   echo "    proto: \"http\"" >> ${NGROK_YML}
   echo "    addr: \"${CONFIG_SUB_BINDING_PORT[${COUNT}]}\"" >> ${NGROK_YML}
   echo "    hostname: ${CONFIG_SUB_HOSTNAME[${COUNT}]}" >> ${NGROK_YML}

@@ -16,6 +16,8 @@ echo "Publisher${COUNT} Configuration."
 while : ; do
   echo "Your hostname will be used as your public ngrok domain."
   read -p "Insert your Hostname (publisher${COUNT}.ngrok.io): " CONFIG_PUB_HOSTNAME[$COUNT]
+  CONFIG_PUB_HOSTNAME_DEFAULT="publisher${COUNT}.ngrok.io"
+  CONFIG_PUB_HOSTNAME[$COUNT]="${CONFIG_PUB_HOSTNAME[$COUNT]:-${CONFIG_PUB_HOSTNAME_DEFAULT}}"
   read -p "Insert your Acquia Content Client Name: " CONFIG_PUB_ACH_CLIENT_NAME[$COUNT]
   echo "The following are Environmental variables used for PHP Debugging."
   echo "If you are unsure about the values, just leave them blank and we will do our best guess to set defaults."

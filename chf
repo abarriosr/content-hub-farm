@@ -59,12 +59,13 @@ else
     echo "\$./chf start    ; Starts services."
     echo "\$./chf stop     ; Stops services."
     echo "\$./chf pause    ; Pause services."
-    echo "\$./chf sh       ; Opens a terminal to the container."
+    echo "\$./chf logs     ; View output from containers."
     echo ""
     echo "For Commands in the container scope:"
     echo ""
     echo "\$./chf <container> enable_xdebug     ; Enables Xdebug in the container."
     echo "\$./chf <container> drush <arguments> ; Executes drush commands in the container."
+    echo "\$./chf <container> sh                ; Opens a terminal to the container."
     echo ""
     exit
   fi

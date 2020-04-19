@@ -37,7 +37,7 @@ read -p "Do you want to enable NFS Mounts (y/n)? " line
 if [[ $line =~ ^[yY]$ ]] ; then
   CONFIG_ENABLE_NFS=1
   echo "Enabling NFS Mounts."
-#  sh ${SCRIPT_DIRECTORY}/enable_nfs_mount.sh
+  sh ${SCRIPT_DIRECTORY}/enable_nfs_mount.sh
 else
   echo "Using native Docker mount."
 fi
@@ -56,6 +56,10 @@ while : ; do
   echo "We recommend a maximum of 3 publishers and 3 subscribers."
   read -p "How many publishers? (1) " CONFIG_NUM_PUBLISHERS
   read -p "How many subscribers? (1) " CONFIG_NUM_SUBSCRIBERS
+  CONFIG_NUM_PUBLISHERS_DEFAULT=1
+  CONFIG_NUM_SUBSCRIBERS_DEFAULT=1
+  CONFIG_NUM_PUBLISHERS="${CONFIG_NUM_PUBLISHERS:-${CONFIG_NUM_PUBLISHERS_DEFAULT}}"
+  CONFIG_NUM_SUBSCRIBERS="${CONFIG_NUM_SUBSCRIBERS:-${CONFIG_NUM_SUBSCRIBERS_DEFAULT}}"
   [[ -z "${CONFIG_NUM_PUBLISHERS##*[!1-9]*}" || -z "${CONFIG_NUM_SUBSCRIBERS##*[!1-9]*}" ]] || break
 done
 
