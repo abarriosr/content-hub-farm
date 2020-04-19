@@ -31,6 +31,10 @@ cd $SCRIPT_DIRECTORY/../../../ || return
 # Setting up Configuration file setup_options.sh
 sh $SCRIPT_DIRECTORY/setup.sh
 
+echo ""
+echo "Starting Installation. This process might take a while..."
+echo ""
+
 # Reading configuration options.
 source $SCRIPT_DIRECTORY/../../include/setup_options.sh
 
@@ -41,8 +45,13 @@ else
   sh $SCRIPT_DIRECTORY/build_code.sh ${CONFIG_BUILD_CODE_BRANCH} ${CONFIG_BUILD_CODE_SOURCE}
 fi
 
+# Building containers.
+echo "Building Docker containers."
+docker-compose build
+echo "Done."
+
 # Starting ngrok service.
-nohup ngrok start --all --config="${HOME}/.ngrok2/ngrok.yml" &
+ngrok start --all --config="${HOME}/.ngrok2/ngrok.yml" &
 
 # Starting Containers.
 sh $SCRIPT_DIRECTORY/up.sh

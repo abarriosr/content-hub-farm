@@ -77,15 +77,12 @@ COMPOSER_MEMORY_LIMIT=-1 composer require drupal/entity_browser \
 echo "Done."
 echo "Building Acquia Content Hub from branch '${ACH_BRANCH}'"
 if [ $BUILD != 'public' ] ; then
-  echo "Using public repository."
-  COMPOSER_MEMORY_LIMIT=-1 composer require drupal/acquia_contenthub:${ACH_BRANCH}
-else
   echo "Using private repository."
   COMPOSER_MEMORY_LIMIT=-1 composer config repositories.acquia_contenthub '{"type":"vcs","url":"git@github.com:acquia/acquia_contenthub.git","no-api":true}'
   COMPOSER_MEMORY_LIMIT=-1 composer require drupal/acquia_contenthub:dev-${ACH_BRANCH}
+else
+  echo "Using public repository."
+  COMPOSER_MEMORY_LIMIT=-1 composer require drupal/acquia_contenthub:${ACH_BRANCH}
 fi
 COMPOSER_MEMORY_LIMIT=-1 composer install
-echo "Done."
-echo "Building Docker containers."
-docker-compose build
 echo "Done."
