@@ -52,9 +52,9 @@ for ((i=0; i<=$limit; i++)) {
 echo "Environment is ready."
 
 # Loading Site Configuration.
-if [ -f "${SCRIPT_DIRECTORY}/setup_options.sh" ] ;  then
+if [ -f "${SCRIPT_DIRECTORY}/../../setup_options.sh" ] ;  then
   # shellcheck source=./setup_options.sh
-  source $SCRIPT_DIRECTORY/setup_options.sh
+  source $SCRIPT_DIRECTORY/../../setup_options.sh
   echo "Publishers:"
   for site in "${CONFIG_PUB_HOSTNAME[@]}"
   do

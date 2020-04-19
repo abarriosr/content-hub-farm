@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-SETUP_FILE="${SCRIPT_DIRECTORY}/../../include/setup_options.sh"
+SETUP_FILE="${SCRIPT_DIRECTORY}/../../../setup_options.sh"
 CONTENT_HUB_FARM_DIRECTORY=`dirname "$(dirname "$(dirname "$SCRIPT_DIRECTORY")"))"`
 
 echo "Configuration Setup for Content Hub Farm"
@@ -123,7 +123,7 @@ echo "CONFIG_BUILD_CODE_SOURCE=\"${CONFIG_BUILD_CODE_SOURCE}\";" >> ${SETUP_FILE
 echo "CONFIG_BUILD_CODE_BRANCH=\"${CONFIG_BUILD_CODE_BRANCH}\";" >> ${SETUP_FILE}
 echo ""
 
-echo "Configuration Options saved in './bin/include/setup_options.sh'."
+echo "Configuration Options saved in 'setup_options.sh'."
 echo "Creating docker-compose.yml file."
 
 # Creating docker-compose.yml.

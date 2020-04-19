@@ -2,7 +2,7 @@
 
 SCRIPT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 CONTENT_HUB_FARM_DIRECTORY=` basename "$( dirname "$( dirname "${SCRIPT_DIRECTORY}")")"`
-SETUP_FILE="${SCRIPT_DIRECTORY}/setup_options.sh"
+SETUP_FILE="${SCRIPT_DIRECTORY}/../../setup_options.sh"
 CONTENT_HUB_FARM=`echo ${CONTENT_HUB_FARM_DIRECTORY} | tr - _`;
 
 # Setting up initial definitions.

@@ -36,7 +36,7 @@ echo "Starting Installation. This process might take a while..."
 echo ""
 
 # Reading configuration options.
-source $SCRIPT_DIRECTORY/../../include/setup_options.sh
+source $SCRIPT_DIRECTORY/../../../setup_options.sh
 
 # Building Source code.
 if [ "${CONFIG_BUILD_CODE_SOURCE}" == 'public' ] ; then

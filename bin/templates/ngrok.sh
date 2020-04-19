@@ -15,7 +15,7 @@ if [ -f $NGROK_YML ]; then
 fi
 
 echo "" > ${NGROK_YML}
-source $SCRIPT_DIRECTORY/../include/setup_options.sh
+source $SCRIPT_DIRECTORY/../../setup_options.sh
 echo "authtoken: $CONFIG_NGROK_TOKEN" >> ${NGROK_YML}
 echo "tunnels:" >> ${NGROK_YML}
 
