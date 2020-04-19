@@ -74,6 +74,5 @@ WORKDIR /var/www/html
 COPY scripts/*.sh /usr/local/bin/
 RUN ln -s /usr/local/bin/docker-entrypoint.sh / # backwards compat
 
-#ENTRYPOINT ["docker-entrypoint.sh"]
 EXPOSE 80
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

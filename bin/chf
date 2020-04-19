@@ -38,7 +38,7 @@ else
   COMMAND_FILE=${SCRIPT_DIRECTORY}/commands/container/${COMMAND}.sh
 
   # Obtaining the list of available containers.
-  list=`docker ps --filter name=${CONTENT_HUB_FARM} | tail -n +2 | awk '{print $NF}'`
+  list=`docker-compose images | sed -n '1,2!p' | cut -f 1 -d ' ' | awk '{print $NF}'`
 
   # Checking if container is available.
   if [[ $list =~ (^|[[:space:]])"$CONTAINER"($|[[:space:]]) ]] ; then
