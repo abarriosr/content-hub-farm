@@ -43,13 +43,14 @@ for ((i=0; i<=$limit; i++)) {
   }
   if [ $print_logs ]; then
     wait ${P[1]} ${P[2]} ${P[3]}
-    echo ""
     print_logs=false
+    sleep 1
+    echo ""
   fi
 }
 
 # Finished installation.
-echo "Environment is ready."
+echo "Content Hub Farm is ready."
 
 # Loading Site Configuration.
 if [ -f "${SCRIPT_DIRECTORY}/../../setup_options.sh" ] ;  then

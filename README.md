@@ -17,98 +17,90 @@ doing any site configuration.
 
 - Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop).
 
+- Download and install [Ngrok](https://ngrok.com). You will need a paid version if you want to use multiple domains.
+
 - Clone this repository.
 
         $git clone git@github.com:abarriosr/content-hub-farm.git
         $cd content-hub-farm 
-         
-- Copy and edit your docker-compose.yml file:
- 
-        $cp docker-compose.yml.dist docker-compose.yml
         
-  Add Content Hub Credentials to the **database** service.      
+- Execute the "go" command:
+
+        $./chf go
+        
+  That's pretty much it. This command will ask you some questions about your Configuration:
   
-  - **Note:** If you want to enable NFS mounts, execute the following instead:
-  
-        $cp docker-compose.yml.nfs_enabled.dist docker-compose.yml
-        $./bin/chf enable_nfs_mount          ; Enables NFS mounts.
-        
-    Then, edit the docker-composer.yml, search for the key below and replace the value to match your system's. 
-    
-        device: ":/System/Volumes/Data/Users/<YOUR_USER>/Sites/content-hub-farm/html"
-    
-    You would normally always want to do do this because there are a lot of performance gains
-    when accessing an NFS mounted volume instead of using the native docker mount.     
-
-- Build the containers
-
-        $./built.sh
-        
-  If no arguments are provided, it will build using **drupal/acquia_contenthub:~2** from the Drupal Public repository. 
-  To build using Acquia Content Hub's private repository: 
-  
-        $./built.sh <ACH-BRANCH> private
-        
-  Use this command every time you need to rebuild your sites' codebase.
-
-- Download and install [Ngrok](https://ngrok.com). You will need a paid version if you want to use multiple domains.
-  Go to your [dashboard page](https://dashboard.ngrok.com/auth) and obtain your **ngrok token**. You will need that 
-  for the following step.
-        
-- Run **ngrok** for multiple domains
-
-        $cp ngrok.yml ~/.ngrok2/ngrok.yml
-        $ngrok ngrok authtoken <NGROK TOKEN>
-        $ngrok start --all
+   - If you want to enable **NFS mounts**. We recommend you do. You would normally always want to do do this because 
+     there are a lot of performance gains when accessing an NFS mounted volume instead of using the native docker mount.     
+   - Your Acquia Content Hub Credentials,
+   - Go to your [Ngrok dashboard page](https://dashboard.ngrok.com/auth) and obtain your **ngrok token**. You will need 
+     to provide that information throughout the questions. Make sure the domains (hostnames) you are adding for your 
+     publishers/subscribers are available Ngrok sub-domains. 
+   - For your publishers or subscribers, you don't need to insert anything in the Environment Variables for PHP Debug,
+     The script will make best guesses about those. You can always change them later.
+   - If you want to build Acquia Content Hub from public repositories, you can leave the branch blank, otherwise you can
+     provide a branch name from Acquia's private repository. 
        
-- Run/Stop the Content Hub Farm
+   It will create a **docker-compose.yml** and **~/ngrok2/ngrok.yml** files, taking backup copies of existing
+   files, if there were any and do the whole building and installation for you.
+         
+## Using the Content Hub Farm Control Script
 
-  Use the Content Hub Farm Control Script: 
+  Use the Content Hub Farm Control Script for anything you do to control your farm of sites: 
  
         $./bin/chf <COMMAND> <COMMAND-ARGUMENTS>  ; General format 
         
-        $./bin/chf build       ; Build or rebuild services.
-        $./bin/chf up          ; Create and start containers.
-        $./bin/chf up -d       ; As above in detached mode. This is normally what you want to use after build.
-        $./bin/chf start       ; Start services.
-        $./bin/chf stop        ; Stop services.
-        $./bin/chf restart     ; Restart services.
-        $./bin/chf pause       ; Pause services.
-        $./bin/chf sh          ; Opens a bash terminal inside the container.
-        $./bin/chf logs        ; View output logs from containers
-        $./bin/chf down        ; Stop and remove containers and networks.
-        $./bin/chf down -v     ; Stop and remove all above plus volumes. If used, It invalidates the persistent feature in sites.
+        $./chf build       ; Build or rebuild service containers.
+        $./chf build_code  ; Build or rebuild Site's source code. 
+        $./chf setup       ; Sets up the environment and creates docker-compose.yml and ngrok.yml files.
+        $./chf up          ; Create and start containers.
+        $./chf start       ; Start services.
+        $./chf stop        ; Stop services.
+        $./chf restart     ; Restart services.
+        $./chf pause       ; Pause services.
+        $./chf sh          ; Opens a bash terminal inside the container.
+        $./chf logs        ; View output logs from containers
+        $./chf down        ; Stop and remove containers and networks.
+        $./chf down -v     ; Stop and remove all above plus volumes. If used, It invalidates the persistent feature in sites.
 
   You can also execute operations on the containers:
  
-        $./bin/chf <CONTAINER> <COMMAND> <COMMAND-ARGUMENTS> ; General format.
+        $./chf <CONTAINER> <COMMAND> <COMMAND-ARGUMENTS> ; General format.
         
-        $./bin/chf <container> enable_xdebug ; Enables Xdebug in container.
-        $./bin/chf <container> drush status  ; Executes 'drush status' on site installed in this container. You can execute any drush command.
+        $./chf <container> enable_xdebug ; Enables Xdebug in container.
+        $./chf <container> drush status  ; Executes 'drush status' on site installed in this container. You can execute any drush command.
                         
   Use this command every time you need to interact with the farm.
   For more instructions on how to use it, you can list all commands. 
  
-         $./bin/chf list-commands   ; Lists all available commands.
+         $./chf list-commands   ; Lists all available commands.
          
+  Executing the control script without any arguments presents a list of containers, or you can also do:
+  
+         $./chf images          ; Lists all available containers.
+  
   Use this script to enable/disable Xdebug, execute drush commands, etc.    
  
-  - **NOTE:**
-  
-    For the moment (Until I fix the ENTRYPOINT ;-) execute the following command in each container after creating and 
-    running the farm to install the sites:
-  
-            $./bin/chf <container> exec docker-entrypoint.sh
+  Access your sites: 
             
-- Visit your new sites 
-            
-            $./bin/chf <container> url       ; Opens the site URL in a browser.
-            $./bin/chf <container> sh        ; Opens a terminal to the container.
+            $./chf <container> url       ; Opens the site URL in a browser.
+            $./chf <container> sh        ; Opens a terminal to the container.
         
 ## Adding more publishers/subscribers:
 
-To add more sites just add entries to the **docker-compose.yml** and **ngrok.yml** files. 
-Those entries have to be paired together. Then run the Content Hub Farm as explained above.
+The easiest way to do this is by executing the **go** command again and reconfigure your system, adding
+more publishers/subscribers. Alternatively you can also do:
+
+        $./chf setup       ; Sets up the environment and creates docker-compose.yml and ngrok.yml files.
+        $./chf build       ; Build or rebuild service containers.
+        $./chf up          ; Create and start containers.
+        
+Those set of commands will reconfigure your system, build the containers and run them without changing the source
+code. 
+  
+If you feel like you want to modify the docker-compose.yml by hand, this is what you need to do to add more sites.
+Just add entries to the **docker-compose.yml** and **ngrok.yml** files. 
+Those entries have to be paired together. Then run the Content Hub Farm as explained above without the **setup** command.
 
 - Add entries into the docker-compose.yml file. For example, a second subscriber could be done by adding the following 
 lines:
@@ -159,14 +151,15 @@ lines:
     ```
   
 ## Adding composer packages/drupal modules:
+
 You can customize your code build and add additional packages following these steps:
 
-- Stop all running containers. 
-- Copy the file **build.sh** into a new custom file that you can modify:
+        $./chf build_code  ; Build or rebuild Site's source code. 
 
-        $cp build.sh build-custom.sh
-        
-- Edit the contents of the file **build-custom.sh** and add/modify your own list of composer packages in this part of the file:
+
+- Stop all running containers. 
+- You can modify the **./bin/commands/internal/build_code.sh**. Edit the contents and add/modify your own list of 
+  composer packages in this part of the file:
 
         # You can modify the list of packages defined in this block.
         # -------------------------------------------------------------
@@ -178,7 +171,7 @@ You can customize your code build and add additional packages following these st
         
 - Build the new codebase by executing your custom build file:
 
-        $./build-custom.sh <ACH-BRANCH>
+        $./chf build_code <ACH-BRANCH> private
   
 - Modify the list of drupal modules that you want to enable in ALL sites by editing the file **scripts/docker-entrypoint.sh** in this part:
 
@@ -211,7 +204,8 @@ You can customize your code build and add additional packages following these st
 
 ## Modifications to the docker container:
 
-- If you don't want to modify the code but would like to customize the docker container then you can edit the file **Dockerfile** and rebuild the containers with the following command:
+- If you don't want to modify the code but would like to customize the docker container then you can edit the file 
+  **Dockerfile** and rebuild the containers with the following command:
 
-        $./bin/chf build 
+        $./chf build 
         
