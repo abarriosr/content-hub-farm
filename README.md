@@ -86,6 +86,60 @@ doing any site configuration.
             $./chf <container> url       ; Opens the site URL in a browser.
             $./chf <container> sh        ; Opens a terminal to the container.
         
+## Reinstall a particular site
+
+You have two options, either manually modify the **docker-compose.yml** file and change the value of this property in 
+all the sites you need to re-install to **false**.
+
+          - PERSISTENT=false
+          
+Then just restart the services:
+
+        $./chf restart     ; Restart services.
+
+Alternatively, instead of doing that, because it uses Drupal multi-sites configuration, you could just delete the 
+site directory in **./html/web/sites/\<YOUR NGROK DOMAIN\>** and restart the services and this will have the same effect.
+
+Remember that if you keep your configuration with **PERSISTENT=false** it will reinstall the site every time you start 
+the services.   
+        
+## PHP Debugging
+
+You can debug any site in the farm from the same codebase. The following are the important PHP Environment variables 
+you need to adjust to make that happen:
+
+    - PHP_IDE_CONFIG
+    - XDEBUG_CONFIG
+    - PHP_INI_XDEBUG_REMOTE_PORT
+
+You can modify them straight in the *docker-composer.yml* file or in the **./setup_options** file (which stores answers
+to all the questions provided during the normal setup process). If you modify the last file, you can do:
+
+    $./chf setup --fast      ; Creates the docker-compose.yml and ngrok.yml files.
+    $./chf restart           ; Restart services.
+    
+The **--fast** option avoids asking you again and just reads from the stored answers in that file, using that 
+information to create the configuration files. Depending on what changes you made you might need to recheck your 
+ngrok setup too. 
+
+Then you would need to enable Xdebug in the container you want to debug. You can disable that later when you dont need it:
+
+        $./chf <container> enable_xdebug  ; Enables Xdebug in container.
+        $./chf <container> disable_xdebug ; Disables Xdebug in container.
+    
+It is good to keep xdebug disabled (default option) if you are not actively debugging because that speeds up PHP processing times.     
+
+If you feel like you need more guidance into how to configure your environment for PHP Debugging, use this guide: 
+https://thecodingmachine.io/configuring-xdebug-phpstorm-docker
+
+Also, if you need to make changes to the Xdebug configuration stored in the containers, you can modify the file 
+**./config/00_xdebug.conf**. Notice that after customizing this file, you need to push it inside the containers, which 
+means you have to rebuild them. Don't worry, if your sites are persistent (All of them are by default) they will not be
+affected by this set of commands:
+
+        $./chf build       ; Build or rebuild service containers.
+        $./chf up          ; Create and start containers.
+
 ## Adding more publishers/subscribers:
 
 The easiest way to do this is by executing the **go** command again and reconfigure your system, adding
@@ -116,7 +170,7 @@ lines:
         environment:
           # There are two sites roles: 'publisher' or 'subscriber'.
           - SITE_ROLE=subscriber
-          # If persistent, the site will persist through `./bin/chf up`
+          # If persistent, the site will persist through `./chf up`
           # Otherwise, the site will be re-installed.
           - PERSISTENT=true
           # The Drupal profile you wish to install (defaults to "standard")  
