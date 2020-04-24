@@ -49,6 +49,7 @@ else
   $DRUSH pm-enable -y admin_toolbar \
     admin_toolbar_tools \
     devel \
+    simpletest \
     environment_indicator
   echo "Done."
   # ----------------------------------------------
