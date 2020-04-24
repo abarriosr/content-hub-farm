@@ -85,4 +85,5 @@ else
   COMPOSER_MEMORY_LIMIT=-1 composer require drupal/acquia_contenthub:${ACH_BRANCH}
 fi
 COMPOSER_MEMORY_LIMIT=-1 composer install
+chmod -R 777 web/sites
 echo "Done."

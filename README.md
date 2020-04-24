@@ -6,7 +6,7 @@ automatically on every site in the farm by modifying code in a single location.
 
 It creates a network of Drupal Muti-sites, each one of them on a different container, all connected together to the same Content Hub Subscription.
 
-If you need more sites, just add some small changes to 2 YAML files and re-run the farm. That's pretty much all you 
+If you need more sites, just run the setup command, alter the number of sites and re-run the farm. That's pretty much all you 
 need to do.
 You can make your sites persist next time you restart the farm. 
 
