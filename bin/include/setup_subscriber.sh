@@ -24,7 +24,7 @@ while : ; do
   echo "If you are unsure about the values, just leave them blank and we will do our best guess to set defaults."
   echo "You can always change them later."
   read -p "PHP_IDE_CONFIG: " CONFIG_SUB_PHP_IDE_CONFIG[$COUNT]
-  PHP_IDE_CONFIG_DEFAULT=${CONTENT_HUB_FARM}_subscriber${COUNT}_1
+  PHP_IDE_CONFIG_DEFAULT="serverName=${CONTENT_HUB_FARM}_subscriber${COUNT}_1"
   CONFIG_SUB_PHP_IDE_CONFIG[$COUNT]="${CONFIG_SUB_PHP_IDE_CONFIG[$COUNT]:-${PHP_IDE_CONFIG_DEFAULT}}"
   read -p "XDEBUG_CONFIG: " CONFIG_SUB_XDEBUG_CONFIG[$COUNT]
   XDEBUG_CONFIG_DEFAULT="remote_port=9000 remote_autostart=1"
