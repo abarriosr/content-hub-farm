@@ -61,7 +61,9 @@ echo "Building Drupal contrib modules..."
 cd $DOCROOT || exit
 # DO NOT MODIFY THIS LIST OF PACKAGES.
 COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush:^9 \
-  && COMPOSER_MEMORY_LIMIT=-1 composer require phpunit/phpunit \
+  && COMPOSER_MEMORY_LIMIT=-1 composer require phpunit/phpunit:^7 \
+  && COMPOSER_MEMORY_LIMIT=-1 composer require symfony/phpunit-bridge:^3.4.3 \
+  && COMPOSER_MEMORY_LIMIT=-1 composer require mikey179/vfsStream \
   && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/devel \
   && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/devel_php \
   && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/environment_indicator \
