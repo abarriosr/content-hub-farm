@@ -37,6 +37,7 @@ RUN set -x \
     php7-xdebug \
     build-base \
     wget \
+    vim \
     composer \
 #  	docker \
 #   openrc \

@@ -85,6 +85,10 @@ doing any site configuration.
             
             $./chf <container> url       ; Opens the site URL in a browser.
             $./chf <container> sh        ; Opens a terminal to the container.
+            
+  Run tests inside the containers:
+  
+            $./chf <container> test html/web/modules/contrib/acquia_contenthub/tests/src/Kernel/ClientFactoryTest.php       ; Runs this test using PHPUnit.                         
         
 ## Reinstall a particular site
 

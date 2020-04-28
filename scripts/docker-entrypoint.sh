@@ -43,6 +43,15 @@ else
   DRUSH="/var/www/html/vendor/bin/drush -l ${HOSTNAME}"
   echo "Done."
 
+  # Enabling PHPUnit XML.
+  PHPUNIT_XML="/var/www/html/web/core/phpunit-${DB_NAME}.xml"
+  echo "Configuring PHPUnit: ${PHPUNIT_XML}..."
+  cp /var/www/html/web/core/phpunit.xml.dist $PHPUNIT_XML
+  DB_URL="mysql:\/\/${DB_USER}:${DB_PASS}@${DB_HOST}:3306\/${DB_NAME}"
+  sed -i "s/<env name=\"SIMPLETEST_BASE_URL\" value=\"\"/<env name=\"SIMPLETEST_BASE_URL\" value=\"http:\/\/${HOSTNAME}\"/g" $PHPUNIT_XML
+  sed -i "s/<env name=\"SIMPLETEST_DB\" value=\"\"/<env name=\"SIMPLETEST_DB\" value=\"${DB_URL}\"/g" $PHPUNIT_XML
+  echo "Done."
+
   # Enable common contrib/custom modules.
   # ----------------------------------------------
   echo "Enabling common contributed modules..."
