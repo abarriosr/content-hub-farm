@@ -83,8 +83,10 @@ doing any site configuration.
  
   Access your sites: 
             
-            $./chf <container> url       ; Opens the site URL in a browser.
-            $./chf <container> sh        ; Opens a terminal to the container.
+            $./chf <container> url                     ; Opens the site URL in a browser.
+            $./chf <container> sh                      ; Opens a terminal to the container.
+            $./chf <container> import-db database.gz   ; Imports compressed database SQL file into container. 
+            $./chf <container> export-db database.sql  ; Exports database from container into SQL file. 
             
   Run tests inside the containers:
   
