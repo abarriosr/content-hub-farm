@@ -26,29 +26,29 @@ TARGET_FILE=$(md5 -q "${FILE}")
 
 case "${FILE}" in
   *.tar.gz | *.tgz )
-        # If it's a tarball.
-        TARGET_FILE="/tmp/${TARGET_FILE}.tar.gz"
-        ;;
+      # If it's a tarball.
+      TARGET_FILE="/tmp/${TARGET_FILE}.tar.gz"
+      ;;
   *.gz )
-        # If it's gzipped.
-        TARGET_FILE="/tmp/${TARGET_FILE}.gz"
-        ;;
+      # If it's gzipped.
+      TARGET_FILE="/tmp/${TARGET_FILE}.gz"
+      ;;
   *.zip )
-        # If it's zipped.
-        TARGET_FILE="/tmp/${TARGET_FILE}.zip"
-        ;;
+      # If it's zipped.
+      TARGET_FILE="/tmp/${TARGET_FILE}.zip"
+      ;;
   *.sql )
-        # it's a normal sql.
-        TARGET_FILE="/tmp/${TARGET_FILE}.sql"
-        ;;
+      # it's a normal sql.
+      TARGET_FILE="/tmp/${TARGET_FILE}.sql"
+      ;;
   *)
-        # File cannot be handled.
-        echo ""
-        echo "The file '${FILE}' cannot be imported. Is it a database file?"
-        echo "Supported extensions: sql, gz, tar.gz, tgz, zip."
-        echo ""
-        exit
-        ;;
+      # File cannot be handled.
+      echo ""
+      echo "The file '${FILE}' cannot be imported. Is it a database file?"
+      echo "Supported extensions: sql, gz, tar.gz, tgz, zip."
+      echo ""
+      exit
+      ;;
 esac
 
 
