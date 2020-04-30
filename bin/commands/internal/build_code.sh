@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Provide help if
+# Provide help if "--help" is provided as argument.
 if [ $1 == "--help" ]; then
   echo "This command builds the codebase that will be used to deploy the sites."
   echo ""
