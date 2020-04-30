@@ -9,6 +9,7 @@ RUN set -x \
     nginx \
     curl \
     bash \
+    pv \
     mysql \
     mysql-client \
     ncurses \
