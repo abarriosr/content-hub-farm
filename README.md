@@ -38,8 +38,8 @@ doing any site configuration.
      publishers/subscribers are available Ngrok sub-domains. 
    - For your publishers or subscribers, you don't need to insert anything in the Environment Variables for PHP Debug,
      The script will make best guesses about those. You can always change them later.
-   - If you want to build Acquia Content Hub from public repositories, you can leave the branch blank, otherwise you can
-     provide a branch name from Acquia's private repository. 
+   - If you want to build Acquia Content Hub from public repositories, you can choose that option, otherwise you can
+     choose private and provide a branch name from Acquia's private repository. 
        
    It will create a **docker-compose.yml** and **~/ngrok2/ngrok.yml** files, taking backup copies of existing
    files, if there were any and do the whole building and installation for you.
@@ -83,14 +83,18 @@ doing any site configuration.
  
   Access your sites: 
             
-            $./chf <container> url                     ; Opens the site URL in a browser.
-            $./chf <container> sh                      ; Opens a terminal to the container.
-            $./chf <container> import-db database.gz   ; Imports compressed database SQL file into container. 
-            $./chf <container> export-db database.sql  ; Exports database from container into SQL file. 
+         $./chf <container> url                     ; Opens the site URL in a browser.
+         $./chf <container> sh                      ; Opens a bash terminal to the container.
+         $./chf <container> exec <command>          ; Execute any command inside the container.
+
+  Import/Export Site's Database:  
+            
+         $./chf <container> import-db database.gz     ; Imports a compressed database SQL file into the container. 
+         $./chf <container> export-db database.sql.gz ; Exports database from container into an gzip compressed SQL file. 
             
   Run tests inside the containers:
   
-            $./chf <container> test html/web/modules/contrib/acquia_contenthub/tests/src/Kernel/ClientFactoryTest.php       ; Runs this test using PHPUnit.                         
+         $./chf <container> test html/web/modules/contrib/acquia_contenthub/tests/src/Kernel/ClientFactoryTest.php       ; Runs this test using PHPUnit.                         
         
 ## Reinstall a particular site
 
@@ -136,7 +140,8 @@ Then you would need to enable Xdebug in the container you want to debug. You can
 It is good to keep xdebug disabled (default option) if you are not actively debugging because that speeds up PHP processing times.     
 
 If you feel like you need more guidance into how to configure your environment for PHP Debugging, use this guide: 
-https://thecodingmachine.io/configuring-xdebug-phpstorm-docker
+https://thecodingmachine.io/configuring-xdebug-phpstorm-docker. When you are following the guide, make sure you create a 
+server name with your docker instance's name so it can map it correctly.
 
 Also, if you need to make changes to the Xdebug configuration stored in the containers, you can modify the file 
 **./config/00_xdebug.conf**. Notice that after customizing this file, you need to push it inside the containers, which 
