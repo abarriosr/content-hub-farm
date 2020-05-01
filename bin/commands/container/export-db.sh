@@ -18,9 +18,20 @@ if [ -z "${FILE}" ] ; then
   echo ""
   echo "You need to provide an output file, Ex:"
   echo ""
-  echo "   ./chf <container> export-db database.sql"
+  echo "   ./chf <container> export-db database.sql.gz"
   echo ""
   exit
+fi
+
+if ! type pv > /dev/null; then
+  # Tell them to install pv
+  echo ""
+  echo "Install 'pv' to monitor progress of the database export process, like transfer rate and size."
+  echo " \$brew install pv"
+  echo ""
+  PV=false
+else
+  PV=true
 fi
 
 TARGET_FILE=${FILE}
@@ -28,27 +39,43 @@ case "${FILE}" in
   *.sql.gz )
       # If it's gzipped.
       export_cmd() {
-        docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | gzip > ${TARGET_FILE}
+        if [ $PV ] ; then
+          docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | pv | gzip > ${TARGET_FILE}
+        else
+          docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | gzip > ${TARGET_FILE}
+        fi
       }
       ;;
   *.gz )
       # If it's gzipped.
       TARGET_FILE="${FILE%.*}.sql.gz"
       export_cmd() {
-        docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | gzip > ${TARGET_FILE}
+        if [ $PV ] ; then
+          docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | pv | gzip > ${TARGET_FILE}
+        else
+          docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | gzip > ${TARGET_FILE}
+        fi
       }
       ;;
   *.sql )
       # it's a normal sql.
       export_cmd() {
-        docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump > ${TARGET_FILE}
+        if [ $PV ] ; then
+          docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | pv > ${TARGET_FILE}
+        else
+          docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump > ${TARGET_FILE}
+        fi
       }
       ;;
   *)
       # If it's a random name.
       TARGET_FILE="${FILE}.sql.gz"
       export_cmd() {
-        docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | gzip > ${TARGET_FILE}
+        if [ $PV ] ; then
+          docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | pv | gzip > ${TARGET_FILE}
+        else
+          docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | gzip > ${TARGET_FILE}
+        fi
       }
       ;;
 esac
