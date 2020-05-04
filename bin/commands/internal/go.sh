@@ -39,11 +39,12 @@ echo ""
 source $SCRIPT_DIRECTORY/../../../setup_options.sh
 
 # Building Source code.
-if [ "${CONFIG_BUILD_CODE_SOURCE}" == 'public' ] ; then
-  sh $SCRIPT_DIRECTORY/build_code.sh
-else
-  sh $SCRIPT_DIRECTORY/build_code.sh ${CONFIG_BUILD_CODE_BRANCH} ${CONFIG_BUILD_CODE_SOURCE}
-fi
+sh $SCRIPT_DIRECTORY/build_code.sh ${CONFIG_BUILD_CODE_SOURCE} ${CONFIG_BUILD_CODE_BRANCH} ${CONFIG_BUILD_DRUPAL_CORE} ${CONFIG_BUILD_PROFILE}
+#if [ "${CONFIG_BUILD_CODE_SOURCE}" == 'public' ] ; then
+#  sh $SCRIPT_DIRECTORY/build_code.sh
+#else
+#  sh $SCRIPT_DIRECTORY/build_code.sh ${CONFIG_BUILD_CODE_SOURCE} ${CONFIG_BUILD_CODE_BRANCH}
+#fi
 
 # Building containers.
 echo "Building Docker containers."

@@ -40,6 +40,7 @@ doing any site configuration.
      The script will make best guesses about those. You can always change them later.
    - If you want to build Acquia Content Hub from public repositories, you can choose that option, otherwise you can
      choose private and provide a branch name from Acquia's private repository. 
+   - If you have created a custom "build profile" in **"bin/profiles"**, you can select that one from the list.  
        
    It will create a **docker-compose.yml** and **~/ngrok2/ngrok.yml** files, taking backup copies of existing
    files, if there were any and do the whole building and installation for you.
@@ -215,62 +216,56 @@ lines:
           host_header: subscriber3.ngrok.io
     ```
   
-## Adding composer packages/drupal modules:
+## Build Profiles:
 
-You can customize your code build and add additional packages following these steps:
+The Code build process can be customized with build profiles. By creating a new profile, you can customize the list of 
+composer packages and hence Drupal core version and modules you will have available in your codebase. 
+You can build your codebase by executing this command:
 
-        $./chf build_code  ; Build or rebuild Site's source code. 
+      $./bin/chf build_code <source> <Content Hub version> <Drupal Core version> <Build Profile> ; Build or rebuild Site's source code.
 
+      Where:
+        - source: "public" (Using Drupal.org repository), or "private" (Using Acquia's private repository). 
+        - Content Hub version: If using "public" then something like "^2", if using "private" use the branch name like "LCH-XXXX".
+        - Drupal Core version: "^8" or "9.0.0-beta2"
+        - Build Profile: If not given it uses the "default" profile, located in "bin/profiles/default.sh"  
 
-- Stop all running containers. 
-- You can modify the **./bin/commands/internal/build_code.sh**. Edit the contents and add/modify your own list of 
+To customize a "build profile", copy the file "bin/profiles/default.sh" and customize it:
+
+      $cp bin/profiles/default.sh bin/profiles/custom.sh  
+      
+You can modify the **./bin/profiles/custom.sh**. Edit the contents and add/modify your own list of 
   composer packages in this part of the file:
 
         # You can modify the list of packages defined in this block.
         # -------------------------------------------------------------
         COMPOSER_MEMORY_LIMIT=-1 composer require drupal/entity_browser \
           && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/features \
-          && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/view_mode_selector \
           && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/paragraphs
-        # -------------------------------------------------------------
-        
-- Build the new codebase by executing your custom build file:
 
-        $./chf build_code <ACH-BRANCH> private
+        if ! ${DRUPAL_9} ; then
+          # Only install these packages if it is not Drupal 9.x
+          COMPOSER_MEMORY_LIMIT=-1 composer require drupal/view_mode_selector
+        fi
+        # -------------------------------------------------------------
+              
+
+If executing the `./chf go` command, it will ask you which build profile you want to use. You can select **"custom"** from 
+the list. Just make sure to keep the input parameters the same when doing your customizations.  
+
+If you don't want to execute the whole installation and just want to build your code base, you can do the following:
+
+- Stop all running containers. 
+
+- Build the new codebase by executing your custom build profile:
+
+        $./chf build_code private <ACH-BRANCH> ^8 custom
   
-- Modify the list of drupal modules that you want to enable in ALL sites by editing the file **scripts/docker-entrypoint.sh** in this part:
-
-        # Enable common contrib/custom modules.
-        # ----------------------------------------------
-        echo "Enabling common contributed modules..."
-        $DRUSH pm-enable -y admin_toolbar \
-          admin_toolbar_tools \
-          devel \
-          environment_indicator
-        echo "Done."
-        # ----------------------------------------------
-- If you want to add drupal modules to only **publishers**, then modify the list of drupal modules in this file: **scripts/publisher_install.sh**:
-
-        # -------------------------------------------------------------
-        # Enable additional contrib/custom modules for publishers.
-        echo "Enabling additional contributed modules for publishers..."
-        $DRUSH pm-enable -y features
-        echo "Done."
-        # -------------------------------------------------------------
-        
-- If you want to add drupal modules to only **subscribers**, then modify the list of drupal modules in this file: **scripts/publisher_install.sh**:
-
-        # -------------------------------------------------------------
-        # Enable additional contrib/custom modules for subscribers.
-        echo "Enabling additional contributed modules for subscribers..."
-        $DRUSH pm-enable -y features
-        echo "Done."
-        # -------------------------------------------------------------
 
 ## Modifications to the docker container:
 
 - If you don't want to modify the code but would like to customize the docker container then you can edit the file 
-  **Dockerfile** and rebuild the containers with the following command:
+  **"Dockerfile"** and rebuild the containers with the following command:
 
         $./chf build 
         

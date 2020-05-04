@@ -96,7 +96,28 @@ echo "" >> ${SETUP_FILE}
 echo ""
 
 # Build code using public or private Content Hub repository.
-echo "Build Site Codebase."
+
+# Obtaining list of available profiles.
+PROFILE_FILES=`ls -1 ${SCRIPT_DIRECTORY}/../../profiles/ | sed -e 's/\.sh$//'`
+BUILD_PROFILES=()
+for i in ${PROFILE_FILES}; do
+  BUILD_PROFILES=("${BUILD_PROFILES[@]}" "$i")
+done
+
+echo "Select a Build Profile:"
+select BUILD_PROFILE in "${BUILD_PROFILES[@]}"
+do
+  CONFIG_BUILD_PROFILE="${BUILD_PROFILE##*/}"
+  if ! [[ "$REPLY" =~ ^[0-9]+$ ]]; then
+    echo "  Incorrect Input: Select a number from the options presented."
+  elif [ 1 -le "$REPLY" ] && [ "$REPLY" -le $((${#BUILD_PROFILES[@]})) ]; then
+    echo "You selected Build Profile: \"$CONFIG_BUILD_PROFILE\"."
+    break;
+  else
+    echo "Incorrect Input: Select a number from the options presented."
+  fi
+done
+
 echo "Do you want to install Acquia Content Hub from Public or Private Repository?"
 CONFIG_BUILD_CODE_SOURCE="public"
 CONFIG_BUILD_CODE_BRANCH="^2"
@@ -118,9 +139,14 @@ do
     *) echo "Invalid option $REPLY";;
   esac
 done
+read -p "Drupal Core (^8): " CONFIG_BUILD_DRUPAL_CORE
+CONFIG_BUILD_DRUPAL_CORE="${CONFIG_BUILD_DRUPAL_CORE:-^8}"
+
 echo "# Build Site Codebase." >> ${SETUP_FILE}
+echo "CONFIG_BUILD_PROFILE=\"${CONFIG_BUILD_PROFILE}\";" >> ${SETUP_FILE}
 echo "CONFIG_BUILD_CODE_SOURCE=\"${CONFIG_BUILD_CODE_SOURCE}\";" >> ${SETUP_FILE}
 echo "CONFIG_BUILD_CODE_BRANCH=\"${CONFIG_BUILD_CODE_BRANCH}\";" >> ${SETUP_FILE}
+echo "CONFIG_BUILD_DRUPAL_CORE=\"${CONFIG_BUILD_DRUPAL_CORE}\";" >> ${SETUP_FILE}
 echo ""
 
 echo "Configuration Options saved in './setup_options.sh'."
