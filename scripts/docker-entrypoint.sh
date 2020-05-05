@@ -79,6 +79,9 @@ else
   # $DRUSH updatedb-status
   # echo "Done."
 
+  # Assign write permissions to the site directory.
+  chmod -R 777 /var/www/html/web/sites/${HOSTNAME}/files
+
   # Disable aggregation and rebuild cache (helps with non-port/hostname alignment issues)
   echo "Setting up variables."
   $DRUSH -y config-set system.performance js.preprocess 0
