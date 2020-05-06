@@ -116,15 +116,23 @@ the services.
         
 ## PHP Debugging
 
-You can debug any site in the farm from the same codebase. The following are the important PHP Environment variables 
-you need to adjust to make that happen:
+You can debug any site in the farm from the same codebase. To do that, you need to enable Xdebug in the container. 
+Notice that you IDE code will remain the same because all of them have the same code, you are just activating which 
+site will be creating the debug session. 
+You can disable Xdebug later when you dont need it:
+
+        $./chf <container> enable_xdebug  ; Enables Xdebug in container.
+        $./chf <container> disable_xdebug ; Disables Xdebug in container.
+
+The following are the important PHP Environment variables you need to adjust if you want to debug from the Command Line.
+The default values provided by the "setup" command should be enough but you can change them if your local configuration
+is different (Ex: Port 9000 is taken and you need to use another one). 
 
     - PHP_IDE_CONFIG
     - XDEBUG_CONFIG
-    - PHP_INI_XDEBUG_REMOTE_PORT
 
-You can modify them straight in the *docker-composer.yml* file or in the **./setup_options** file (which stores answers
-to all the questions provided during the normal setup process). If you modify the last file, you can do:
+You can modify them straight in the *docker-composer.yml* file or in the file **./setup_options.sh** (which stores 
+answers to all the questions provided during the normal setup process). If you modify the last file, you can do:
 
     $./chf setup --fast      ; Creates the docker-compose.yml and ngrok.yml files.
     $./chf restart           ; Restart services.
@@ -132,11 +140,6 @@ to all the questions provided during the normal setup process). If you modify th
 The **--fast** option avoids asking you again and just reads from the stored answers in that file, using that 
 information to create the configuration files. Depending on what changes you made you might need to recheck your 
 ngrok setup too. 
-
-Then you would need to enable Xdebug in the container you want to debug. You can disable that later when you dont need it:
-
-        $./chf <container> enable_xdebug  ; Enables Xdebug in container.
-        $./chf <container> disable_xdebug ; Disables Xdebug in container.
     
 It is good to keep xdebug disabled (default option) if you are not actively debugging because that speeds up PHP processing times.     
 
@@ -196,7 +199,6 @@ lines:
           # These are your Xdebug parameters.
           - PHP_IDE_CONFIG=serverName=content-hub-farm_subscriber1_2
           - XDEBUG_CONFIG=remote_port=9000 remote_autostart=1
-          - PHP_INI_XDEBUG_REMOTE_PORT=9000
         volumes:
           - html:/var/www/html
         ports:
@@ -227,7 +229,7 @@ You can build your codebase by executing this command:
       Where:
         - source: "public" (Using Drupal.org repository), or "private" (Using Acquia's private repository). 
         - Content Hub version: If using "public" then something like "^2", if using "private" use the branch name like "LCH-XXXX".
-        - Drupal Core version: "^8" or "9.0.0-beta2"
+        - Drupal Core version: Examples: "^8" or "9.0.0-beta2".
         - Build Profile: If not given it uses the "default" profile, located in "bin/profiles/default.sh"  
 
 To customize a "build profile", copy the file "bin/profiles/default.sh" and customize it:
