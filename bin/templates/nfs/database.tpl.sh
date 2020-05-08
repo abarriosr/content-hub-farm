@@ -25,6 +25,8 @@ services:
     volumes:
       - db_data:/var/lib/mysql
       - ./database/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - ${CONFIG_MYSQL_LOCAL_PORT}:3306
     networks:
       ch_farm:
         ipv4_address: 192.168.1.100

@@ -50,6 +50,16 @@ echo ""
 sh $SCRIPT_DIRECTORY/../../include/setup_contenthub.sh
 echo ""
 
+# Setup MySQL Local Port Mapping.
+echo "Please provide the MySQL local port you want to use."
+echo "You could use tools like 'Sequel Pro' to connect to the site's databases."
+read -p "MySQL port (3306): " CONFIG_MYSQL_LOCAL_PORT
+CONFIG_MYSQL_LOCAL_PORT="${CONFIG_MYSQL_LOCAL_PORT:-3306}"
+echo "# MySQL Local Port." >> ${SETUP_FILE}
+echo "CONFIG_MYSQL_LOCAL_PORT=\"${CONFIG_MYSQL_LOCAL_PORT}\";" >> ${SETUP_FILE}
+echo "" >> ${SETUP_FILE}
+echo ""
+
 # Number of Publishers/Subscribers.
 echo "Number of Publishers / Subscribers."
 while : ; do
