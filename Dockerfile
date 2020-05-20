@@ -74,7 +74,6 @@ COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 WORKDIR /var/www/html
 # Copy Site scripts into the container.
 COPY scripts/*.sh /usr/local/bin/
-RUN ln -s /usr/local/bin/docker-entrypoint.sh / # backwards compat
 
 EXPOSE 80
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

@@ -38,7 +38,7 @@ for ((i=0; i<=$limit; i++)) {
     if [ -z "$container" ]; then break; fi;
     print_logs=true
     containers_list=`echo $containers_list | awk '{ $1=""; print substr($0,2) }' `
-    docker exec -it $container docker-entrypoint.sh | awk -v c="$container" -v j=$(($j+1)) '$0="\033[1;3"j"m" c "> \033[0m"$0' &
+    docker exec -it $container site_installation.sh | awk -v c="$container" -v j=$(($j+1)) '$0="\033[1;3"j"m" c "> \033[0m"$0' &
     P[$j]=$!
   }
   if [ $print_logs ]; then
