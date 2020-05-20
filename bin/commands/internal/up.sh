@@ -7,4 +7,4 @@ echo "Creating and starting containers containers..."
 docker-compose up -d $args
 
 # Site Installation.
-sh $SCRIPT_DIRECTORY/../../include/site_installation.sh
+bash $SCRIPT_DIRECTORY/../../include/site_installation.sh

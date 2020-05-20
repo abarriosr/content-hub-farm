@@ -29,7 +29,7 @@ echo "Done."
 cd $SCRIPT_DIRECTORY/../../../ || return
 
 # Setting up Configuration file setup_options.sh
-sh $SCRIPT_DIRECTORY/setup.sh
+bash $SCRIPT_DIRECTORY/setup.sh
 
 echo ""
 echo "Starting Installation. This process might take a while..."
@@ -39,7 +39,7 @@ echo ""
 source $SCRIPT_DIRECTORY/../../../setup_options.sh
 
 # Building Source code.
-sh $SCRIPT_DIRECTORY/build_code.sh ${CONFIG_BUILD_CODE_SOURCE} ${CONFIG_BUILD_CODE_BRANCH} ${CONFIG_BUILD_DRUPAL_CORE} ${CONFIG_BUILD_PROFILE}
+bash $SCRIPT_DIRECTORY/build_code.sh ${CONFIG_BUILD_CODE_SOURCE} ${CONFIG_BUILD_CODE_BRANCH} ${CONFIG_BUILD_DRUPAL_CORE} ${CONFIG_BUILD_PROFILE}
 #if [ "${CONFIG_BUILD_CODE_SOURCE}" == 'public' ] ; then
 #  sh $SCRIPT_DIRECTORY/build_code.sh
 #else
@@ -55,4 +55,4 @@ echo "Done."
 ngrok start --all --config="${HOME}/.ngrok2/ngrok.yml" &
 
 # Starting Containers.
-sh $SCRIPT_DIRECTORY/up.sh
+bash $SCRIPT_DIRECTORY/up.sh
