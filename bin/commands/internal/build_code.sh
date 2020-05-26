@@ -49,4 +49,4 @@ DRUPAL="${3:-^8}"
 PROFILE="${4:-default}"
 
 # Executing build profile $PROFILE.
-sh ${SCRIPT_DIRECTORY}/../../profiles/${PROFILE}.sh ${BUILD} ${ACH_BRANCH} ${DRUPAL}
+bash ${SCRIPT_DIRECTORY}/../../profiles/${PROFILE}.sh ${BUILD} ${ACH_BRANCH} ${DRUPAL}

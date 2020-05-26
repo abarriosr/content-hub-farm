@@ -18,10 +18,10 @@ if [[ $1 == "--fast" && -f "$SETUP_FILE" ]] ; then
     TEMPLATE='nfs'
   fi
   echo "Regenerating docker-composer.yml..."
-  sh ${CONTENT_HUB_FARM_DIRECTORY}/bin/templates/docker-compose.sh $TEMPLATE
+  bash ${CONTENT_HUB_FARM_DIRECTORY}/bin/templates/docker-compose.sh $TEMPLATE
   # Creating ngrok.yml.
   echo "Regenerating ~/.ngrok2/ngrok.yml..."
-  sh ${CONTENT_HUB_FARM_DIRECTORY}/bin/templates/ngrok.sh
+  bash ${CONTENT_HUB_FARM_DIRECTORY}/bin/templates/ngrok.sh
   echo "Finished Setup."
   exit
 fi
@@ -37,7 +37,7 @@ read -p "Do you want to enable NFS Mounts (y/n)? " line
 if [[ $line =~ ^[yY]$ ]] ; then
   CONFIG_ENABLE_NFS=1
   echo "Enabling NFS Mounts."
-  sh ${SCRIPT_DIRECTORY}/enable_nfs_mount.sh
+  bash ${SCRIPT_DIRECTORY}/enable_nfs_mount.sh
 else
   echo "Using native Docker mount."
 fi
@@ -47,7 +47,7 @@ echo "" >> ${SETUP_FILE}
 echo ""
 
 # Setup Content Hub.
-sh $SCRIPT_DIRECTORY/../../include/setup_contenthub.sh
+bash $SCRIPT_DIRECTORY/../../include/setup_contenthub.sh
 echo ""
 
 # Setup MySQL Local Port Mapping.
@@ -83,14 +83,14 @@ echo ""
 # Looping through each Publisher.
 for (( i=1; i<=${CONFIG_NUM_PUBLISHERS}; i++ ))
 do
-  sh $SCRIPT_DIRECTORY/../../include/setup_publisher.sh $i
+  bash $SCRIPT_DIRECTORY/../../include/setup_publisher.sh $i
   echo ""
 done
 
 # Looping through each Subscriber.
 for (( i=1; i<=${CONFIG_NUM_SUBSCRIBERS}; i++ ))
 do
-  sh $SCRIPT_DIRECTORY/../../include/setup_subscriber.sh $i ${CONFIG_NUM_PUBLISHERS}
+  bash $SCRIPT_DIRECTORY/../../include/setup_subscriber.sh $i ${CONFIG_NUM_PUBLISHERS}
   echo ""
 done
 
@@ -167,9 +167,9 @@ TEMPLATE='default'
 if [ "${CONFIG_ENABLE_NFS}" == 1 ] ; then
   TEMPLATE='nfs'
 fi
-sh ${CONTENT_HUB_FARM_DIRECTORY}/bin/templates/docker-compose.sh $TEMPLATE
+bash ${CONTENT_HUB_FARM_DIRECTORY}/bin/templates/docker-compose.sh $TEMPLATE
 
 # Creating ngrok.yml.
-sh ${CONTENT_HUB_FARM_DIRECTORY}/bin/templates/ngrok.sh
+bash ${CONTENT_HUB_FARM_DIRECTORY}/bin/templates/ngrok.sh
 
 echo "Finished Setup."

@@ -7,4 +7,4 @@ echo "Start services..."
 docker-compose start $args
 
 # Site Installation.
-sh $SCRIPT_DIRECTORY/../../include/site_installation.sh
+bash $SCRIPT_DIRECTORY/../../include/site_installation.sh

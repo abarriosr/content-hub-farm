@@ -18,9 +18,9 @@ fi
 
 # Creating template.
 echo "" > ${DOCKER_COMPOSE_YML}
-sh ${TEMPLATE_DIRECTORY}/database.tpl.sh >> ${DOCKER_COMPOSE_YML}
-sh ${TEMPLATE_DIRECTORY}/publisher.tpl.sh >> ${DOCKER_COMPOSE_YML}
-sh ${TEMPLATE_DIRECTORY}/subscriber.tpl.sh >> ${DOCKER_COMPOSE_YML}
-sh ${TEMPLATE_DIRECTORY}/network_volume.tpl.sh >> ${DOCKER_COMPOSE_YML}
+bash ${TEMPLATE_DIRECTORY}/database.tpl.sh >> ${DOCKER_COMPOSE_YML}
+bash ${TEMPLATE_DIRECTORY}/publisher.tpl.sh >> ${DOCKER_COMPOSE_YML}
+bash ${TEMPLATE_DIRECTORY}/subscriber.tpl.sh >> ${DOCKER_COMPOSE_YML}
+bash ${TEMPLATE_DIRECTORY}/network_volume.tpl.sh >> ${DOCKER_COMPOSE_YML}
 
 echo "Created Configuration file: `basename ${DOCKER_COMPOSE_YML}.`"

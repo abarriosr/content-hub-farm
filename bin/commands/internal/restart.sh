@@ -7,4 +7,4 @@ echo "Restarting services..."
 docker-compose restart $args
 
 # Site Installation.
-sh $SCRIPT_DIRECTORY/../../include/site_installation.sh
+bash $SCRIPT_DIRECTORY/../../include/site_installation.sh
