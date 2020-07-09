@@ -61,23 +61,23 @@ cd $DOCROOT || exit
 
 # DO NOT MODIFY THIS LIST OF PACKAGES.
 COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush:${DRUSH_VERSION} \
-  && COMPOSER_MEMORY_LIMIT=-1 composer require phpunit/phpunit:${PHPUNIT_VERSION} \
-  && COMPOSER_MEMORY_LIMIT=-1 composer require symfony/phpunit-bridge:^3.4.3 \
-  && COMPOSER_MEMORY_LIMIT=-1 composer require mikey179/vfsStream \
-  && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/environment_indicator \
-  && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/admin_toolbar
+  phpunit/phpunit:${PHPUNIT_VERSION} \
+  require symfony/phpunit-bridge:^3.4.3 \
+  mikey179/vfsStream \
+  drupal/environment_indicator \
+  drupal/admin_toolbar
 
 if ! ${DRUPAL_9} ; then
   # Only install these packages if it is not Drupal 9.x
   COMPOSER_MEMORY_LIMIT=-1 composer require drupal/devel \
-  && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/devel_php
+    drupal/devel_php
 fi
 
 # You can modify the list of packages defined in this block.
 # -------------------------------------------------------------
 COMPOSER_MEMORY_LIMIT=-1 composer require drupal/entity_browser \
-  && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/features \
-  && COMPOSER_MEMORY_LIMIT=-1 composer require drupal/paragraphs
+  drupal/features \
+  drupal/paragraphs
 
 if ! ${DRUPAL_9} ; then
   # Only install these packages if it is not Drupal 9.x
@@ -86,6 +86,10 @@ fi
 # -------------------------------------------------------------
 echo "Done."
 echo "Building Acquia Content Hub from branch '${ACH_BRANCH}'"
+
+# Installing Acquia Content Hub Console
+COMPOSER_MEMORY_LIMIT=-1 composer config repositories.acquia_console '{"type":"vcs","url":"git@github.com:acquia/console.git","no-api":true}'
+COMPOSER_MEMORY_LIMIT=-1 composer require acquia/console:'0.0.x-dev'
 
 # Installing Acquia Content Hub.
 if [ $BUILD != 'public' ] ; then
