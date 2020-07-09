@@ -11,6 +11,7 @@ RUN set -x \
     bash \
     pv \
     mysql \
+    git \
     mysql-client \
     ncurses \
     php7 php7-fpm \
@@ -21,6 +22,7 @@ RUN set -x \
     php7-iconv \
     php7-json \
     php7-mcrypt \
+    php7-intl \
     php7-mbstring \
     php7-opcache \
     php7-openssl \
