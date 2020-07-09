@@ -56,4 +56,4 @@ esac
 echo ""
 echo "Importing database file ${FILE} into container '${CONTAINER}'"
 docker cp ${FILE} ${CONTAINER}:${TARGET_FILE}
-docker exec -it ${CONTAINER} import-db.sh ${TARGET_FILE} --delete
+docker exec ${CONTAINER} import-db.sh ${TARGET_FILE} --delete
