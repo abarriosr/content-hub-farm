@@ -89,7 +89,7 @@ echo "Building Acquia Content Hub from branch '${ACH_BRANCH}'"
 
 # Installing Acquia Content Hub Console
 COMPOSER_MEMORY_LIMIT=-1 composer config repositories.acquia_console '{"type":"vcs","url":"git@github.com:acquia/console.git","no-api":true}'
-COMPOSER_MEMORY_LIMIT=-1 composer require acquia/console:'0.0.x-dev'
+COMPOSER_MEMORY_LIMIT=-1 composer require acquia/console
 
 # Installing Acquia Content Hub.
 if [ $BUILD != 'public' ] ; then
