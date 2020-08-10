@@ -1,0 +1,124 @@
+#!/usr/bin/env bash
+
+_help() {
+  cat <<HELP
+
+Usage: acli <command> [options] <args>
+
+Commands:
+---------
+  import-db                             Restore database using backups from database/
+  export-db                             Create database backups and export them to database/
+  cli [--service=SERVICE_NAME]          Run commoncli on the given service or all the services.
+  run <command>                         Execute an arbitrary command in the containers
+  drush [--publishers|--subscribers]    Execute drush in the containers, only on publishers or subscribers or both
+
+HELP
+}
+
+_remove_arg() {
+    args="${args[@]/$1}"
+}
+
+args="$@"
+for flag in ${args[@]}; do
+  case $flag in
+    '--subscribers')
+      siteList=subscriber 
+      _remove_arg $flag
+    ;;
+    '--publishers')
+      siteList=publisher
+      _remove_arg $flag
+    ;;
+    --service=*)
+      optService=${flag#'--service='}
+      _remove_arg $flag
+    ;;  
+  esac
+done
+
+declare -A sites
+_init_service_mapping() {
+  local containers=(`docker-compose config --service | grep -v database`)
+  local uris=(`docker-compose config | grep -A 11 ${siteList:-''} | grep hostname | grep -v database | awk '{print $2}'`)
+  for ((i=0; i<${#containers[@]}; i++)); do
+    sites[${containers[$i]}]=${uris[$i]}
+  done
+}
+_init_service_mapping
+
+_get_containers() {
+  `docker-compose images | sed -n '1,2!p' | cut -f 1 -d ' ' | grep -v database`
+}
+
+_drush() {
+  local service=$1
+  shift
+  local uri=${1#'--uri '}
+  docker-compose exec -T $service /bin/bash -c "echo -e '\n \033[0;33mExecuting drush command for: $uri\033[0;m\n'"
+  docker-compose exec -T $service ./vendor/bin/drush $@
+}
+
+_backup_db() {
+  local containers=$(_get_containers)
+  for cont in ${containers[@]}; do 
+      ./chf $cont ${1} ./database/${cont}.sql.gz &
+  done
+}
+
+_cli() {
+  local services=$optService
+  if [[ -z $services ]]; then
+    services=${!sites[@]}
+  fi
+
+  for s in $services; do
+    echo  "docker-compose exec $s ./vendor/bin/commoncli --uri ${sites[$s]} '$@'"
+  done
+}
+
+uris=$(docker-compose config | grep -A 11 ${siteList:-''} | grep hostname | grep -v database | awk '{print $2}')
+
+_run() {
+  local services=$optService
+  if [[ -z $services ]]; then
+    services=${!sites[@]}
+  fi
+
+  for s in $services; do
+    eval "docker-compose exec -T ${s} /bin/bash -c '${@}'" &
+  done
+}
+
+cmd=(${args[0]})
+_remove_arg $cmd
+case $cmd in
+  'drush')
+    for uri in $uris; do
+      _drush publisher1 "--uri $uri ${args[@]}" &
+      printf "\n\n"
+    done
+  ;;
+
+  'cli')
+    _cli $args
+  ;;
+
+  'import-db')
+    _backup_db import-db
+  ;;
+
+  'export-db')
+    _backup_db export-db
+  ;;
+
+  'run')
+    shift
+    _run $@
+  ;;
+
+  *)
+    _help
+  ;;
+esac
