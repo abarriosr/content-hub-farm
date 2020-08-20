@@ -62,7 +62,7 @@ cd $DOCROOT || exit
 # DO NOT MODIFY THIS LIST OF PACKAGES.
 COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush:${DRUSH_VERSION} \
   phpunit/phpunit:${PHPUNIT_VERSION} \
-  require symfony/phpunit-bridge:^3.4.3 \
+  symfony/phpunit-bridge:^3.4.3 \
   mikey179/vfsStream \
   drupal/environment_indicator \
   drupal/admin_toolbar
