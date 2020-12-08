@@ -2,6 +2,9 @@ FROM alpine:latest
 VOLUME /var/www/html
 
 RUN set -x \
+# create nginx user/group first, to be consistent throughout docker variants
+#  && addgroup -g 101 -S nginx \
+#  && adduser -S -D -H -u 101 -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx \
   && echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
   && apk update && apk upgrade \
   && apk add --update \
@@ -48,6 +51,7 @@ RUN set -x \
   && mkdir /tmp/nginx \
   && sed -i 's/memory_limit = .*/memory_limit = 768M/' /etc/php7/php.ini \
   && sed -i 's/post_max_size = .*/post_max_size = 50M/' /etc/php7/php.ini \
+  && sed -i 's/upload_max_filesize = .*/upload_max_filesize = 16M/' /etc/php7/php.ini \
   && echo 'sendmail_path = "/bin/true"' >> /etc/php7/php.ini \
   && echo 'date.timezone = "America/New_York"' >> /etc/php7/php.ini \
   && sed -i '/^user/c \user = nginx' /etc/php7/php-fpm.conf \
