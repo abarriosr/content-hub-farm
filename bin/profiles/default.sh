@@ -65,7 +65,9 @@ COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush:${DRUSH_VERSION} \
   symfony/phpunit-bridge:^3.4.3 \
   mikey179/vfsStream \
   drupal/environment_indicator \
-  drupal/admin_toolbar
+  drupal/admin_toolbar \
+  drupal/coder \
+  squizlabs/php_codesniffer
 
 if ! ${DRUPAL_9} ; then
   # Only install these packages if it is not Drupal 9.x
@@ -105,4 +107,8 @@ else
 fi
 COMPOSER_MEMORY_LIMIT=-1 composer install
 chmod -R 777 web/sites
+
+# Configure Coding Standards
+./vendor/bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer
+./vendor/bin/phpcs -n --standard=Drupal,DrupalPractice web/modules/contrib/acquia_contenthub/src web/modules/contrib/acquia_contenthub/tests
 echo "Done."
