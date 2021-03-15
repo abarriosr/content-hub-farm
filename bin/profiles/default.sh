@@ -29,7 +29,7 @@ DRUSH_VERSION="^9"
 PHPUNIT_VERSION="^7"
 DRUPAL_9=false;
 # @TODO: Find a better way to figure out what Drupal version we are installing.
-if [[ "$DRUPAL" =~ "9.0.0".* ]]; then
+if [[ "$DRUPAL" =~ "9".* || "$DRUPAL" == "^9" ]]; then
   echo "Installing ${DRUPAL}..."
   DRUSH_VERSION="^10"
   PHPUNIT_VERSION="^9"
@@ -89,9 +89,13 @@ fi
 echo "Done."
 echo "Building Acquia Content Hub from branch '${ACH_BRANCH}'"
 
-# Installing Acquia Content Hub Console
-COMPOSER_MEMORY_LIMIT=-1 composer config repositories.acquia_console '{"type":"vcs","url":"git@github.com:acquia/console.git","no-api":true}'
-COMPOSER_MEMORY_LIMIT=-1 composer require acquia/console:dev-master
+# Composer for Drupal 9 now requires minimum-stability "stable".
+# So we cannot install dev packages anymore:
+# https://www.drupal.org/project/user_guide/issues/3022675
+if ${DRUPAL_9} ; then
+  # Change composer to allow minimum-stability: dev:
+  sed -i'.min-stability.original' -e 's/"minimum-stability": "stable"/"minimum-stability": "dev"/g' composer.json
+fi
 
 # Installing Acquia Content Hub.
 if [ $BUILD != 'public' ] ; then
@@ -110,5 +114,5 @@ chmod -R 777 web/sites
 
 # Configure Coding Standards
 ./vendor/bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer
-./vendor/bin/phpcs -n --standard=Drupal,DrupalPractice web/modules/contrib/acquia_contenthub/src web/modules/contrib/acquia_contenthub/tests
+#./vendor/bin/phpcs -n --standard=Drupal,DrupalPractice web/modules/contrib/acquia_contenthub/src web/modules/contrib/acquia_contenthub/tests
 echo "Done."

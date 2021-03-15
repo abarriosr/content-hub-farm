@@ -18,8 +18,8 @@ if [ $1 == "--help" ]; then
   echo ""
   echo "    $./bin/chf build_code private LCH-XXXX             ; By default drupal core=^8 and using default profile."
   echo "    $./bin/chf build_code private                      ; Using 8.x-2.x as default branch."
-  echo "    $./bin/chf build_code private 8.x-2.x 9.0.0-beta2"
-  echo "    $./bin/chf build_code private LCH-XXXX 9.0.0-beta2 default"
+  echo "    $./bin/chf build_code private 8.x-2.x ^9"
+  echo "    $./bin/chf build_code private LCH-XXXX 9.1.0 default"
   echo ""
   exit
 fi
