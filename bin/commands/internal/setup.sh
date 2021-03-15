@@ -149,6 +149,7 @@ do
     *) echo "Invalid option $REPLY";;
   esac
 done
+echo "Select the version of Drupal core you want to use. Default is D8 (^8). You can also select D9 (^9)."
 read -p "Drupal Core (^8): " CONFIG_BUILD_DRUPAL_CORE
 CONFIG_BUILD_DRUPAL_CORE="${CONFIG_BUILD_DRUPAL_CORE:-^8}"
 
