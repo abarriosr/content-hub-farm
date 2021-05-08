@@ -2,6 +2,17 @@
 
 DRUSH="/var/www/html/vendor/bin/drush -l ${HOSTNAME}"
 
+# Finding the DOCROOT...
+# @TODO: Find a better way to find out the docroot.
+if [ -d "/var/www/html/docroot" ]
+then
+    echo "Using directory 'docroot' as the DOCROOT..."
+    DOCROOT='docroot';
+else
+    echo "Using directory 'web' as the DOCROOT..."
+    DOCROOT='web';
+fi
+
 # -------------------------------------------------------------
 # Enable additional contrib/custom modules for subscribers.
 echo "Enabling additional contributed modules for subscribers..."
@@ -16,7 +27,7 @@ $DRUSH pm-enable -y acquia_contenthub \
 echo "Done."
 
 # Adding additional configuration to settings.php.
-SETTINGS_PHP=/var/www/html/web/sites/${HOSTNAME}/settings.php
+SETTINGS_PHP=/var/www/html/${DOCROOT}/sites/${HOSTNAME}/settings.php
 echo "Adding additional subscriber configuration to settings.php ..."
 chmod u+w ${SETTINGS_PHP}
 echo "
