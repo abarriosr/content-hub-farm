@@ -39,12 +39,12 @@ echo ""
 source $SCRIPT_DIRECTORY/../../../setup_options.sh
 
 # Building Source code.
-bash $SCRIPT_DIRECTORY/build_code.sh ${CONFIG_BUILD_CODE_SOURCE} ${CONFIG_BUILD_CODE_BRANCH} ${CONFIG_BUILD_DRUPAL_CORE} ${CONFIG_BUILD_PROFILE}
-#if [ "${CONFIG_BUILD_CODE_SOURCE}" == 'public' ] ; then
-#  sh $SCRIPT_DIRECTORY/build_code.sh
-#else
-#  sh $SCRIPT_DIRECTORY/build_code.sh ${CONFIG_BUILD_CODE_SOURCE} ${CONFIG_BUILD_CODE_BRANCH}
-#fi
+if [ "${CONFIG_BUILD_PROFILE}" == 'customer-environment' ] ; then
+  bash $SCRIPT_DIRECTORY/build_code.sh ${CONFIG_BUILD_CODE_REPOSITORY} ${CONFIG_BUILD_CODE_BRANCH} ${CONFIG_BUILD_DRUPAL_CORE} ${CONFIG_BUILD_PROFILE}
+else
+  # By default just use the 'default' profile.
+  bash $SCRIPT_DIRECTORY/build_code.sh ${CONFIG_BUILD_CODE_SOURCE} ${CONFIG_BUILD_CODE_BRANCH} ${CONFIG_BUILD_DRUPAL_CORE} ${CONFIG_BUILD_PROFILE}
+fi
 
 # Building containers.
 echo "Building Docker containers."

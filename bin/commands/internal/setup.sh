@@ -60,6 +60,87 @@ echo "CONFIG_MYSQL_LOCAL_PORT=\"${CONFIG_MYSQL_LOCAL_PORT}\";" >> ${SETUP_FILE}
 echo "" >> ${SETUP_FILE}
 echo ""
 
+# Build code using Build Profiles.
+
+# Obtaining list of available profiles.
+PROFILE_FILES=`ls -1 ${SCRIPT_DIRECTORY}/../../profiles/ | sed -e 's/\.sh$//'`
+BUILD_PROFILES=()
+for i in ${PROFILE_FILES}; do
+  BUILD_PROFILES=("${BUILD_PROFILES[@]}" "$i")
+done
+
+echo "Select a Build Profile:"
+select BUILD_PROFILE in "${BUILD_PROFILES[@]}"
+do
+  CONFIG_BUILD_PROFILE="${BUILD_PROFILE##*/}"
+  if ! [[ "$REPLY" =~ ^[0-9]+$ ]]; then
+    echo "  Incorrect Input: Select a number from the options presented."
+  elif [ 1 -le "$REPLY" ] && [ "$REPLY" -le $((${#BUILD_PROFILES[@]})) ]; then
+    echo "You selected Build Profile: \"$CONFIG_BUILD_PROFILE\"."
+    break;
+  else
+    echo "Incorrect Input: Select a number from the options presented."
+  fi
+done
+
+# If user selects customer environment the provide git repository.
+case $CONFIG_BUILD_PROFILE in
+  "customer-environment")
+    # This is the "Customer Environment" Profile.
+    echo "To replicate a Customer Environment, please provide the Git Repository and branch/tag to clone it from..."
+    echo ""
+    while : ; do
+      read -p "Insert the Customer's Git Repository: " CONFIG_BUILD_CODE_REPOSITORY
+      read -p "Insert the branch/tag name: " CONFIG_BUILD_CODE_BRANCH
+      echo "Are the following values correct:"
+      echo "  - Customer's Git Repository = ${CONFIG_BUILD_CODE_REPOSITORY}"
+      echo "  - Branch/tag name = ${CONFIG_BUILD_CODE_BRANCH}"
+      read -p "(y/n)? " line
+        [[ ! $line =~ ^[Yy]$ ]] || break
+    done
+    echo "Saving Customer Environment information..."
+    echo "# Build Site Codebase." >> ${SETUP_FILE}
+    echo "CONFIG_BUILD_PROFILE=\"${CONFIG_BUILD_PROFILE}\";" >> ${SETUP_FILE}
+    echo "CONFIG_BUILD_CODE_REPOSITORY=\"${CONFIG_BUILD_CODE_REPOSITORY}\";" >> ${SETUP_FILE}
+    echo "CONFIG_BUILD_CODE_BRANCH=\"${CONFIG_BUILD_CODE_BRANCH}\";" >> ${SETUP_FILE}
+    ;;
+  *)
+    # This is the "Default" Profile.
+    echo "Do you want to install Acquia Content Hub from Public or Private Repository?"
+    CONFIG_BUILD_CODE_SOURCE="public"
+    CONFIG_BUILD_CODE_BRANCH="^2"
+    options=("Public" "Private")
+    select opt in "${options[@]}"
+    do
+      case $opt in
+        "Public")
+          echo "Using latest public release of Content Hub 2.x from Drupal.org."
+          break;
+          ;;
+        "Private")
+          CONFIG_BUILD_CODE_SOURCE="private"
+          echo "Using Acquia's Private repository."
+          read -p "Insert a Branch (8.x-2.x): " CONFIG_BUILD_CODE_BRANCH
+          CONFIG_BUILD_CODE_BRANCH="${CONFIG_BUILD_CODE_BRANCH:-"8.x-2.x"}"
+          break;
+          ;;
+        *) echo "Invalid option $REPLY";;
+      esac
+    done
+    echo "Select the version of Drupal core you want to use. Default is D8 (^8). You can also select D9 (^9)."
+    read -p "Drupal Core (^8): " CONFIG_BUILD_DRUPAL_CORE
+    CONFIG_BUILD_DRUPAL_CORE="${CONFIG_BUILD_DRUPAL_CORE:-^8}"
+
+    echo "# Build Site Codebase." >> ${SETUP_FILE}
+    echo "CONFIG_BUILD_PROFILE=\"${CONFIG_BUILD_PROFILE}\";" >> ${SETUP_FILE}
+    echo "CONFIG_BUILD_CODE_SOURCE=\"${CONFIG_BUILD_CODE_SOURCE}\";" >> ${SETUP_FILE}
+    echo "CONFIG_BUILD_CODE_BRANCH=\"${CONFIG_BUILD_CODE_BRANCH}\";" >> ${SETUP_FILE}
+    echo "CONFIG_BUILD_DRUPAL_CORE=\"${CONFIG_BUILD_DRUPAL_CORE}\";" >> ${SETUP_FILE}
+    ;;
+esac
+echo "" >> ${SETUP_FILE}
+echo ""
+
 # Number of Publishers/Subscribers.
 echo "Number of Publishers / Subscribers."
 while : ; do
@@ -83,14 +164,14 @@ echo ""
 # Looping through each Publisher.
 for (( i=1; i<=${CONFIG_NUM_PUBLISHERS}; i++ ))
 do
-  bash $SCRIPT_DIRECTORY/../../include/setup_publisher.sh $i
+  bash $SCRIPT_DIRECTORY/../../include/setup_publisher.sh $i ${CONFIG_BUILD_PROFILE}
   echo ""
 done
 
 # Looping through each Subscriber.
 for (( i=1; i<=${CONFIG_NUM_SUBSCRIBERS}; i++ ))
 do
-  bash $SCRIPT_DIRECTORY/../../include/setup_subscriber.sh $i ${CONFIG_NUM_PUBLISHERS}
+  bash $SCRIPT_DIRECTORY/../../include/setup_subscriber.sh $i ${CONFIG_NUM_PUBLISHERS} ${CONFIG_BUILD_PROFILE}
   echo ""
 done
 
@@ -103,61 +184,6 @@ echo "Please Provide your Ngrok Token. You can obtain it from https://dashboard.
 read -p "Ngrok token: " CONFIG_NGROK_TOKEN
 echo "CONFIG_NGROK_TOKEN=\"${CONFIG_NGROK_TOKEN}\";" >> ${SETUP_FILE}
 echo "" >> ${SETUP_FILE}
-echo ""
-
-# Build code using public or private Content Hub repository.
-
-# Obtaining list of available profiles.
-PROFILE_FILES=`ls -1 ${SCRIPT_DIRECTORY}/../../profiles/ | sed -e 's/\.sh$//'`
-BUILD_PROFILES=()
-for i in ${PROFILE_FILES}; do
-  BUILD_PROFILES=("${BUILD_PROFILES[@]}" "$i")
-done
-
-echo "Select a Build Profile:"
-select BUILD_PROFILE in "${BUILD_PROFILES[@]}"
-do
-  CONFIG_BUILD_PROFILE="${BUILD_PROFILE##*/}"
-  if ! [[ "$REPLY" =~ ^[0-9]+$ ]]; then
-    echo "  Incorrect Input: Select a number from the options presented."
-  elif [ 1 -le "$REPLY" ] && [ "$REPLY" -le $((${#BUILD_PROFILES[@]})) ]; then
-    echo "You selected Build Profile: \"$CONFIG_BUILD_PROFILE\"."
-    break;
-  else
-    echo "Incorrect Input: Select a number from the options presented."
-  fi
-done
-
-echo "Do you want to install Acquia Content Hub from Public or Private Repository?"
-CONFIG_BUILD_CODE_SOURCE="public"
-CONFIG_BUILD_CODE_BRANCH="^2"
-options=("Public" "Private")
-select opt in "${options[@]}"
-do
-  case $opt in
-    "Public")
-      echo "Using latest public release of Content Hub 2.x from Drupal.org."
-      break;
-      ;;
-    "Private")
-      CONFIG_BUILD_CODE_SOURCE="private"
-      echo "Using Acquia's Private repository."
-      read -p "Insert a Branch (8.x-2.x): " CONFIG_BUILD_CODE_BRANCH
-      CONFIG_BUILD_CODE_BRANCH="${CONFIG_BUILD_CODE_BRANCH:-"8.x-2.x"}"
-      break;
-      ;;
-    *) echo "Invalid option $REPLY";;
-  esac
-done
-echo "Select the version of Drupal core you want to use. Default is D8 (^8). You can also select D9 (^9)."
-read -p "Drupal Core (^8): " CONFIG_BUILD_DRUPAL_CORE
-CONFIG_BUILD_DRUPAL_CORE="${CONFIG_BUILD_DRUPAL_CORE:-^8}"
-
-echo "# Build Site Codebase." >> ${SETUP_FILE}
-echo "CONFIG_BUILD_PROFILE=\"${CONFIG_BUILD_PROFILE}\";" >> ${SETUP_FILE}
-echo "CONFIG_BUILD_CODE_SOURCE=\"${CONFIG_BUILD_CODE_SOURCE}\";" >> ${SETUP_FILE}
-echo "CONFIG_BUILD_CODE_BRANCH=\"${CONFIG_BUILD_CODE_BRANCH}\";" >> ${SETUP_FILE}
-echo "CONFIG_BUILD_DRUPAL_CORE=\"${CONFIG_BUILD_DRUPAL_CORE}\";" >> ${SETUP_FILE}
 echo ""
 
 echo "Configuration Options saved in './setup_options.sh'."
