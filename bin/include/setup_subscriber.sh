@@ -21,6 +21,9 @@ while : ; do
   CONFIG_SUB_HOSTNAME_DEFAULT="subscriber${COUNT}.ngrok.io"
   CONFIG_SUB_HOSTNAME[$COUNT]="${CONFIG_SUB_HOSTNAME[$COUNT]:-${CONFIG_SUB_HOSTNAME_DEFAULT}}"
   read -p "Insert your Acquia Content Client Name: " CONFIG_SUB_ACH_CLIENT_NAME[$COUNT]
+  if [ ${CONFIG_BUILD_PROFILE} == 'customer-environment' ]; then
+    read -p "DATABASE_BACKUP (full path): " CONFIG_SUB_DATABASE_BACKUP[$COUNT]
+  fi
   echo "The following are Environmental variables used for PHP Debugging."
   echo "If you are unsure about the values, just leave them blank and we will do our best guess to set defaults."
   echo "You can always change them later."
@@ -30,19 +33,16 @@ while : ; do
   read -p "XDEBUG_CONFIG: " CONFIG_SUB_XDEBUG_CONFIG[$COUNT]
   XDEBUG_CONFIG_DEFAULT="remote_port=9000 remote_autostart=1"
   CONFIG_SUB_XDEBUG_CONFIG[$COUNT]="${CONFIG_SUB_XDEBUG_CONFIG[$COUNT]:-${XDEBUG_CONFIG_DEFAULT}}"
-  if [ ${CONFIG_BUILD_PROFILE} == 'customer-environment' ]; then
-    read -p "DATABASE_BACKUP: " CONFIG_SUB_DATABASE_BACKUP[$COUNT]
-  fi
 
   # Asking for verification.
   echo "Are the following values correct:"
   echo "  - Subscriber$COUNT Hostname: ${CONFIG_SUB_HOSTNAME[$COUNT]}"
   echo "  - Acquia Content Client Name: ${CONFIG_SUB_ACH_CLIENT_NAME[$COUNT]}"
-  echo "  - PHP_IDE_CONFIG: ${CONFIG_SUB_PHP_IDE_CONFIG[$COUNT]}"
-  echo "  - XDEBUG_CONFIG: \"${CONFIG_SUB_XDEBUG_CONFIG[$COUNT]}\""
   if [ ${CONFIG_BUILD_PROFILE} == 'customer-environment' ]; then
     echo "  - DATABASE_BACKUP: \"${CONFIG_SUB_DATABASE_BACKUP[$COUNT]}\""
   fi
+  echo "  - PHP_IDE_CONFIG: ${CONFIG_SUB_PHP_IDE_CONFIG[$COUNT]}"
+  echo "  - XDEBUG_CONFIG: \"${CONFIG_SUB_XDEBUG_CONFIG[$COUNT]}\""
   read -p "(y/n)? " line
     [[ ! $line =~ ^[Yy]$ ]] || break
 done
@@ -51,11 +51,11 @@ echo "Saving Subscriber$COUNT configuration..."
 echo "# Subscriber$COUNT." >> ${SETUP_FILE}
 echo "CONFIG_SUB_HOSTNAME[${COUNT}]=\"${CONFIG_SUB_HOSTNAME[${COUNT}]}\";" >> ${SETUP_FILE}
 echo "CONFIG_SUB_ACH_CLIENT_NAME[${COUNT}]=\"${CONFIG_SUB_ACH_CLIENT_NAME[${COUNT}]}\";" >> ${SETUP_FILE}
-echo "CONFIG_SUB_PHP_IDE_CONFIG[${COUNT}]=\"${CONFIG_SUB_PHP_IDE_CONFIG[${COUNT}]}\";" >> ${SETUP_FILE}
-echo "CONFIG_SUB_XDEBUG_CONFIG[${COUNT}]=\"${CONFIG_SUB_XDEBUG_CONFIG[${COUNT}]}\";" >> ${SETUP_FILE}
 if [ ${CONFIG_BUILD_PROFILE} == 'customer-environment' ]; then
   echo "CONFIG_SUB_DATABASE_BACKUP[${COUNT}]=\"${CONFIG_SUB_DATABASE_BACKUP[${COUNT}]}\";" >> ${SETUP_FILE}
 fi
+echo "CONFIG_SUB_PHP_IDE_CONFIG[${COUNT}]=\"${CONFIG_SUB_PHP_IDE_CONFIG[${COUNT}]}\";" >> ${SETUP_FILE}
+echo "CONFIG_SUB_XDEBUG_CONFIG[${COUNT}]=\"${CONFIG_SUB_XDEBUG_CONFIG[${COUNT}]}\";" >> ${SETUP_FILE}
 echo "CONFIG_SUB_BINDING_PORT[${COUNT}]=\"${CONFIG_SUB_BINDING_PORT[${COUNT}]}\";" >> ${SETUP_FILE}
 echo "CONFIG_SUB_IP_ADDRESS[${COUNT}]=\"${CONFIG_SUB_IP_ADDRESS[${COUNT}]}\";" >> ${SETUP_FILE}
 echo "" >> ${SETUP_FILE}

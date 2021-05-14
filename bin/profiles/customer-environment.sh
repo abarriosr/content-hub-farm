@@ -27,15 +27,15 @@ echo "Done."
 echo "Building Drupal project in folder '${BASE_ROOT}'..."
 git clone --branch ${GIT_BRANCH} --single-branch --depth=1 ${GIT_REPOSITORY} ${BASE_ROOT}
 echo "Done."
-echo "Adding Drupal contrib modules..."
+# echo "Adding Drupal contrib modules..."
 cd $BASE_ROOT || exit
 
 # DO NOT MODIFY THIS LIST OF PACKAGES.
-COMPOSER_MEMORY_LIMIT=-1 composer require drupal/environment_indicator \
-  drupal/admin_toolbar \
+# COMPOSER_MEMORY_LIMIT=-1 composer require drupal/environment_indicator \
+#  drupal/admin_toolbar \
 
 # -------------------------------------------------------------
-echo "Done."
+# echo "Done."
 
 # Finding the DOCROOT...
 # @TODO: Find a better way to find out the docroot.
