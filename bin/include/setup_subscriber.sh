@@ -22,7 +22,7 @@ while : ; do
   CONFIG_SUB_HOSTNAME[$COUNT]="${CONFIG_SUB_HOSTNAME[$COUNT]:-${CONFIG_SUB_HOSTNAME_DEFAULT}}"
   read -p "Insert your Acquia Content Client Name: " CONFIG_SUB_ACH_CLIENT_NAME[$COUNT]
   if [ ${CONFIG_BUILD_PROFILE} == 'customer-environment' ]; then
-    read -p "DATABASE_BACKUP (full path): " CONFIG_SUB_DATABASE_BACKUP[$COUNT]
+    read -p "DATABASE_BACKUP (filename inside 'backups' directory): " CONFIG_SUB_DATABASE_BACKUP[$COUNT]
   fi
   echo "The following are Environmental variables used for PHP Debugging."
   echo "If you are unsure about the values, just leave them blank and we will do our best guess to set defaults."

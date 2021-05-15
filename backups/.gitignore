@@ -1,0 +1,4 @@
+# Please put all database backups inside this directory.
+*
+# Ignore (but don't delete) this line
+!.gitignore
