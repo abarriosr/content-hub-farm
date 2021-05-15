@@ -49,6 +49,10 @@ else
   chmod 777 ./sites/${HOSTNAME}/settings.php
 
   # Site installation.
+  if [ "${DATABASE_BACKUP}" ]; then
+    # If we are provided a backup then install the minimal profile as we will override with db backup.
+    profile='minimal'
+  fi
   ../vendor/drush/drush/drush si -y $profile install_configure_form.enable_update_status_emails=NULL -y --account-name=${site_admin} --account-pass=${site_password} --account-mail=${site_mail} --site-mail=${site_mail} --site-name=${HOSTNAME} --sites-subdir=${HOSTNAME} --db-url=${DB_URL}
   DRUSH="/var/www/html/vendor/bin/drush -l ${HOSTNAME}"
   echo "Done."
@@ -62,6 +66,7 @@ else
   sed -i "s/<env name=\"SIMPLETEST_DB\" value=\"\"/<env name=\"SIMPLETEST_DB\" value=\"${DB_URL}\"/g" $PHPUNIT_XML
   echo "Done."
 
+  # If we are not provided with a database backup then proceed normal installation.
   if [ -z "${DATABASE_BACKUP}" ]; then
     # Enable common contrib/custom modules.
     # ----------------------------------------------
