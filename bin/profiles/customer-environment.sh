@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
 # Build Code base.
 
 # Project Document Base Root Folder.
@@ -49,6 +51,14 @@ else
 fi
 
 chmod -R 777 ${DOCROOT}/sites
+
+# Apply Content Hub patch.
+PATCH_FILE="${SCRIPT_DIRECTORY}/../../config/patches/no-client-cdf-update.patch"
+ACH_FOLDER=`find ./ -iname acquia_contenthub`
+cd ${ACH_FOLDER} || exit
+
+echo "Applying patch 'config/patches/no-client-cdf-update.patch'..."
+patch -p1 < $PATCH_FILE
 
 # Configure Coding Standards
 # ./vendor/bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer

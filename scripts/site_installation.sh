@@ -42,7 +42,6 @@ else
   echo "Installing Drupal for site ${HOSTNAME}."
   mkdir /var/www/html/${DOCROOT}/sites/${HOSTNAME}
   chmod -R 777 /var/www/html/${DOCROOT}/sites/${HOSTNAME}
-  # chown -R nginx:nginx /var/www/html/${DOCROOT}/sites/${HOSTNAME}
 
   cd /var/www/html/${DOCROOT} || return;
   mkdir -p ./sites/${HOSTNAME}/files
@@ -63,40 +62,49 @@ else
   sed -i "s/<env name=\"SIMPLETEST_DB\" value=\"\"/<env name=\"SIMPLETEST_DB\" value=\"${DB_URL}\"/g" $PHPUNIT_XML
   echo "Done."
 
-  # Enable common contrib/custom modules.
-  # ----------------------------------------------
-  echo "Enabling common contributed modules..."
-  $DRUSH pm-enable -y admin_toolbar \
-    admin_toolbar_tools \
-    devel \
-    simpletest \
-    environment_indicator
-  echo "Done."
-  # ----------------------------------------------
+  if [ -z "${DATABASE_BACKUP}" ]; then
+    # Enable common contrib/custom modules.
+    # ----------------------------------------------
+    echo "Enabling common contributed modules..."
+    $DRUSH pm-enable -y admin_toolbar \
+      admin_toolbar_tools \
+      devel \
+      simpletest \
+      environment_indicator
+    echo "Done."
+    # ----------------------------------------------
 
-  # Customize site according to site role.
-  case ${SITE_ROLE} in
-  'publisher')
-    /usr/local/bin/publisher_install.sh
-    ;;
-  'subscriber')
-    /usr/local/bin/subscriber_install.sh
-    ;;
-  esac
+    # Customize site according to site role.
+    case ${SITE_ROLE} in
+    'publisher')
+      /usr/local/bin/publisher_install.sh
+      ;;
+    'subscriber')
+      /usr/local/bin/subscriber_install.sh
+      ;;
+    esac
 
-  # Run any related updates and share status
-  # echo "Running database updates..."
-  # $DRUSH updatedb
-  # $DRUSH updatedb-status
-  # echo "Done."
+    # Run any related updates and share status
+    # echo "Running database updates..."
+    # $DRUSH updatedb
+    # $DRUSH updatedb-status
+    # echo "Done."
+
+
+    # Disable aggregation and rebuild cache (helps with non-port/hostname alignment issues)
+    echo "Setting up variables."
+    $DRUSH -y config-set system.performance js.preprocess 0
+    $DRUSH -y config-set system.performance css.preprocess 0
+  else
+    echo "Importing database backup: '${DATABASE_BACKUP}'..."
+    import-db.sh /var/www/backups/${DATABASE_BACKUP}
+
+    # Delete existing configuration.
+    $DRUSH config:delete acquia_contenthub.admin_settings -y
+  fi
 
   # Assign write permissions to the site directory.
   chmod -R 777 /var/www/html/${DOCROOT}/sites/${HOSTNAME}/files
-
-  # Disable aggregation and rebuild cache (helps with non-port/hostname alignment issues)
-  echo "Setting up variables."
-  $DRUSH -y config-set system.performance js.preprocess 0
-  $DRUSH -y config-set system.performance css.preprocess 0
 
   # Connect to Acquia Content Hub.
   /usr/local/bin/ach_connect.sh
