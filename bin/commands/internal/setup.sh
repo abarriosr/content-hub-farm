@@ -99,6 +99,8 @@ case $CONFIG_BUILD_PROFILE in
       read -p "(y/n)? " line
         [[ ! $line =~ ^[Yy]$ ]] || break
     done
+    CONFIG_BUILD_CODE_REPOSITORY="${CONFIG_BUILD_CODE_REPOSITORY:-NONE}"
+    CONFIG_BUILD_CODE_BRANCH="${CONFIG_BUILD_CODE_BRANCH:-NONE}"
     echo "Saving Customer Environment information..."
     echo "# Build Site Codebase." >> ${SETUP_FILE}
     echo "CONFIG_BUILD_PROFILE=\"${CONFIG_BUILD_PROFILE}\";" >> ${SETUP_FILE}

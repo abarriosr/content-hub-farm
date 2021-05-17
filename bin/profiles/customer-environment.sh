@@ -11,7 +11,7 @@ BASE_ROOT=html
 GIT_REPOSITORY="${1:-'NONE'}"
 GIT_BRANCH="${2:-'NONE'}"
 
-if [ $GIT_REPOSITORY != 'NONE' ] && [ $GIT_BRANCH != 'NONE' ] ; then
+if [ $GIT_REPOSITORY == 'NONE' ] || [ $GIT_BRANCH == 'NONE' ] ; then
   echo "Using existing codebase from '${BASE_ROOT}'."
   echo "---------------------------------------------------"
 else
