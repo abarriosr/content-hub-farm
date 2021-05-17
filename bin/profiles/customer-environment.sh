@@ -11,24 +11,25 @@ BASE_ROOT=html
 GIT_REPOSITORY="${1:-'NONE'}"
 GIT_BRANCH="${2:-'NONE'}"
 
-if [ $GIT_REPOSITORY == 'NONE' ] || [ $GIT_BRANCH == 'NONE' ] ; then
-  echo "Not enough information provided to build Codebase from Customer's Git Repository."
-fi
-
-echo "Building Codebase from Customer Repository using GIT REPOSITORY = '${GIT_REPOSITORY}' and GIT BRANCH = '${GIT_BRANCH}'."
-echo "---------------------------------------------------"
-if [ -d "$BASE_ROOT" ]; then
-  echo "Cleaning up existing directory $BASE_ROOT"
-  chmod -R 777 $BASE_ROOT
-  rm -Rf $BASE_ROOT
+if [ $GIT_REPOSITORY != 'NONE' ] && [ $GIT_BRANCH != 'NONE' ] ; then
+  echo "Using existing codebase from '${BASE_ROOT}'."
+  echo "---------------------------------------------------"
 else
-  echo "Creating directory $BASE_ROOT"
-  mkdir $BASE_ROOT
+  echo "Building Codebase from Customer Repository using GIT REPOSITORY = '${GIT_REPOSITORY}' and GIT BRANCH = '${GIT_BRANCH}'."
+  echo "---------------------------------------------------"
+  if [ -d "$BASE_ROOT" ]; then
+    echo "Cleaning up existing directory $BASE_ROOT"
+    chmod -R 777 $BASE_ROOT
+    rm -Rf $BASE_ROOT
+  else
+    echo "Creating directory $BASE_ROOT"
+    mkdir $BASE_ROOT
+  fi
+  echo "Done."
+  echo "Building Drupal project in folder '${BASE_ROOT}'..."
+  git clone --branch ${GIT_BRANCH} --single-branch --depth=1 ${GIT_REPOSITORY} ${BASE_ROOT}
+  echo "Done."
 fi
-echo "Done."
-echo "Building Drupal project in folder '${BASE_ROOT}'..."
-git clone --branch ${GIT_BRANCH} --single-branch --depth=1 ${GIT_REPOSITORY} ${BASE_ROOT}
-echo "Done."
 # echo "Adding Drupal contrib modules..."
 cd $BASE_ROOT || exit
 

@@ -87,11 +87,12 @@ done
 case $CONFIG_BUILD_PROFILE in
   "customer-environment")
     # This is the "Customer Environment" Profile.
-    echo "To replicate a Customer Environment, please provide the Git Repository and branch/tag to clone it from..."
+    echo "To replicate a Customer Environment, please provide the Git Repository and branch/tag to clone it from."
+    echo "If you already have the code deployed in 'html' directory, leave 'Git Repository' and 'branch/tag' blank."
     echo ""
     while : ; do
-      read -p "Insert the Customer's Git Repository: " CONFIG_BUILD_CODE_REPOSITORY
-      read -p "Insert the branch/tag name: " CONFIG_BUILD_CODE_BRANCH
+      read -p "Insert the Customer's Git Repository (blank if deployed in 'html'): " CONFIG_BUILD_CODE_REPOSITORY
+      read -p "Insert the branch/tag name (blank if deployed in 'html'): " CONFIG_BUILD_CODE_BRANCH
       echo "Are the following values correct:"
       echo "  - Customer's Git Repository = ${CONFIG_BUILD_CODE_REPOSITORY}"
       echo "  - Branch/tag name = ${CONFIG_BUILD_CODE_BRANCH}"
