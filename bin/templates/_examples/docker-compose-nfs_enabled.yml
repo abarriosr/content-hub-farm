@@ -31,7 +31,7 @@ services:
       - PERSISTENT=true
       - ACH_CLIENT_NAME=publisher1-docker
       - PHP_IDE_CONFIG="serverName=content-hub-farm_publisher_1"
-      - XDEBUG_CONFIG=remote_port=9000 remote_autostart=1
+      - XDEBUG_CONFIG=remote_port=9003 remote_autostart=1
     volumes:
       - type: volume
         source: nfsmount
@@ -55,7 +55,7 @@ services:
       - PERSISTENT=true
       - ACH_CLIENT_NAME=subscriber1-docker
       - PHP_IDE_CONFIG=serverName=content-hub-farm_subscriber1_1
-      - XDEBUG_CONFIG=remote_port=9000 remote_autostart=1
+      - XDEBUG_CONFIG=remote_port=9003 remote_autostart=1
     volumes:
       - type: volume
         source: nfsmount
