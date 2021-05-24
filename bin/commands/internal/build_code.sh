@@ -28,9 +28,9 @@ fi
 
 # By default use 'public' repository.
 BUILD="${1:-public}"
-if [[ ! (-z "$1") && $BUILD != 'public' ]] ; then
-  BUILD='private'
-fi
+#if [[ ! (-z "$1") && $BUILD != 'public' ]] ; then
+#  BUILD='private'
+#fi
 
 # If provided a branch name, use it, otherwise use default 8.x-2.x
 ACH_BRANCH=$2

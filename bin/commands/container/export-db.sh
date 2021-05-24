@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Finding the DOCROOT...
+# @TODO: Find a better way to find out the docroot.
+if [ -d "html/docroot" ]
+then
+    echo "Using directory 'docroot' as the DOCROOT..."
+    DOCROOT='docroot';
+else
+    echo "Using directory 'web' as the DOCROOT..."
+    DOCROOT='web';
+fi
+
 # Provide help if "--help" is requested.
 if [[ $2 == "--help" ]]; then
   echo ""
@@ -40,9 +51,9 @@ case "${FILE}" in
       # If it's gzipped.
       export_cmd() {
         if [ $PV ] ; then
-          docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | pv | gzip > ${TARGET_FILE}
+          docker exec -t -w /var/www/html/${DOCROOT} ${CONTAINER} /usr/local/bin/drush.sh sql-dump | pv | gzip > ${TARGET_FILE}
         else
-          docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | gzip > ${TARGET_FILE}
+          docker exec -t -w /var/www/html/${DOCROOT} ${CONTAINER} /usr/local/bin/drush.sh sql-dump | gzip > ${TARGET_FILE}
         fi
       }
       ;;
@@ -51,9 +62,9 @@ case "${FILE}" in
       TARGET_FILE="${FILE%.*}.sql.gz"
       export_cmd() {
         if [ $PV ] ; then
-          docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | pv | gzip > ${TARGET_FILE}
+          docker exec -t -w /var/www/html/${DOCROOT} ${CONTAINER} /usr/local/bin/drush.sh sql-dump | pv | gzip > ${TARGET_FILE}
         else
-          docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | gzip > ${TARGET_FILE}
+          docker exec -t -w /var/www/html/${DOCROOT} ${CONTAINER} /usr/local/bin/drush.sh sql-dump | gzip > ${TARGET_FILE}
         fi
       }
       ;;
@@ -61,9 +72,9 @@ case "${FILE}" in
       # it's a normal sql.
       export_cmd() {
         if [ $PV ] ; then
-          docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | pv > ${TARGET_FILE}
+          docker exec -t -w /var/www/html/${DOCROOT} ${CONTAINER} /usr/local/bin/drush.sh sql-dump | pv > ${TARGET_FILE}
         else
-          docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump > ${TARGET_FILE}
+          docker exec -t -w /var/www/html/${DOCROOT} ${CONTAINER} /usr/local/bin/drush.sh sql-dump > ${TARGET_FILE}
         fi
       }
       ;;
@@ -72,9 +83,9 @@ case "${FILE}" in
       TARGET_FILE="${FILE}.sql.gz"
       export_cmd() {
         if [ $PV ] ; then
-          docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | pv | gzip > ${TARGET_FILE}
+          docker exec -t -w /var/www/html/${DOCROOT} ${CONTAINER} /usr/local/bin/drush.sh sql-dump | pv | gzip > ${TARGET_FILE}
         else
-          docker exec -t -w /var/www/html/web ${CONTAINER} /usr/local/bin/drush.sh sql-dump | gzip > ${TARGET_FILE}
+          docker exec -t -w /var/www/html/${DOCROOT} ${CONTAINER} /usr/local/bin/drush.sh sql-dump | gzip > ${TARGET_FILE}
         fi
       }
       ;;

@@ -200,7 +200,7 @@ lines:
           - ACH_HOSTNAME=https://plexus-dev.content-hub.acquia.com
           # These are your Xdebug parameters.
           - PHP_IDE_CONFIG=serverName=content-hub-farm_subscriber1_2
-          - XDEBUG_CONFIG=remote_port=9000 remote_autostart=1
+          - XDEBUG_CONFIG=remote_port=9003 remote_autostart=1
         volumes:
           - html:/var/www/html
         ports:

@@ -18,12 +18,18 @@ cat  << EOF
       - SITE_ROLE=publisher
       - PERSISTENT=true
       - ACH_CLIENT_NAME=${CONFIG_PUB_ACH_CLIENT_NAME[$COUNT]}
+      - DATABASE_BACKUP=${CONFIG_PUB_DATABASE_BACKUP[$COUNT]}
       - PHP_IDE_CONFIG=${CONFIG_PUB_PHP_IDE_CONFIG[$COUNT]}
       - XDEBUG_CONFIG=${CONFIG_PUB_XDEBUG_CONFIG[$COUNT]}
     volumes:
       - type: volume
         source: nfsmount
         target: /var/www/html
+        volume:
+          nocopy: true
+      - type: volume
+        source: backups
+        target: /var/www/backups
         volume:
           nocopy: true
     ports:

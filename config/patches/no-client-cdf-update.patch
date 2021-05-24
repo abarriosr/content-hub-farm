@@ -1,0 +1,12 @@
+diff --git a/src/Client/ClientFactory.php b/src/Client/ClientFactory.php
+index 7cca5507..d2c947ee 100755
+--- a/src/Client/ClientFactory.php
++++ b/src/Client/ClientFactory.php
+@@ -254,6 +254,7 @@ class ClientFactory {
+    * @throws \ReflectionException
+    */
+   public function updateClientCdf() {
++    return true;
+     /** @var \Acquia\ContentHubClient\CDF\ClientCDFObject $remote_cdf */
+     $remote_cdf = $this->client->getEntity($this->settings->getUuid());
+     // Don't update the ClientCDF if the remote object matches the local one.
