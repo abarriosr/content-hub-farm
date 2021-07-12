@@ -1,5 +1,6 @@
 html
 docker-compose.yml
+docker-compose*.yml
 .idea
 database/initdb.d/*.sql
 setup_options.sh
