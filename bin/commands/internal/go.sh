@@ -52,7 +52,7 @@ docker-compose build
 echo "Done."
 
 # Starting ngrok service.
-ngrok start --all --config="${HOME}/.ngrok2/ngrok.yml" &
+ngrok start --all --config="${HOME}/.ngrok2/ngrok.yml" > /dev/null &
 
 # Starting Containers.
 bash $SCRIPT_DIRECTORY/up.sh

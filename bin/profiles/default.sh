@@ -48,10 +48,10 @@ if [ -d "$DOCROOT" ]; then
   echo "Cleaning up existing directory $DOCROOT"
   chmod -R 777 $DOCROOT
   rm -Rf $DOCROOT
-else
-  echo "Creating directory $DOCROOT"
-  mkdir $DOCROOT
 fi
+
+echo "Creating directory $DOCROOT"
+mkdir $DOCROOT
 echo "Done."
 echo "Creating Drupal project in folder '${DOCROOT}'..."
 COMPOSER_MEMORY_LIMIT=-1 composer create-project drupal/recommended-project:${DRUPAL} ${DOCROOT} --no-interaction

@@ -82,4 +82,4 @@ volumes:
       type: "nfs"
       o: "addr=host.docker.internal,hard,nolock,rw"
       # Change this to reflect your system directory.
-      device: ":/System/Volumes/Data/Users/<YOUR_USER>/Sites/content-hub-farm/html"
+      device: ":${PWD}/html"

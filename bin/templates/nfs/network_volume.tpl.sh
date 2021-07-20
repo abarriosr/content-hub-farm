@@ -20,11 +20,11 @@ volumes:
     driver_opts:
       type: "nfs"
       o: "addr=host.docker.internal,hard,nolock,rw"
-      device: ":/System/Volumes/Data/${CONFIG_VOLUME_DEVICE_PATH}/html"
+      device: ":${PWD}/html"
   backups:
     driver: local
     driver_opts:
       type: "nfs"
       o: "addr=host.docker.internal,hard,nolock,rw"
-      device: ":/System/Volumes/Data/${CONFIG_VOLUME_DEVICE_PATH}/backups"
+      device: ":${PWD}/backups"
 EOF
