@@ -69,22 +69,16 @@ COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush:${DRUSH_VERSION} \
   drupal/coder \
   squizlabs/php_codesniffer
 
-if ! ${DRUPAL_9} ; then
-  # Only install these packages if it is not Drupal 9.x
-  COMPOSER_MEMORY_LIMIT=-1 composer require drupal/devel \
-    drupal/devel_php
-fi
+# Install devel module.
+COMPOSER_MEMORY_LIMIT=-1 composer require drupal/devel \
+  drupal/devel_php
 
 # You can modify the list of packages defined in this block.
 # -------------------------------------------------------------
 COMPOSER_MEMORY_LIMIT=-1 composer require drupal/entity_browser \
   drupal/features \
-  drupal/paragraphs
-
-if ! ${DRUPAL_9} ; then
-  # Only install these packages if it is not Drupal 9.x
-  COMPOSER_MEMORY_LIMIT=-1 composer require drupal/view_mode_selector
-fi
+  drupal/paragraphs \
+  drupal/view_mode_selector
 # -------------------------------------------------------------
 echo "Done."
 echo "Building Acquia Content Hub from branch '${ACH_BRANCH}'"
