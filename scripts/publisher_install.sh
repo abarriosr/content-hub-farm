@@ -22,9 +22,19 @@ echo "Done."
 
 # Enable Content Hub modules.
 echo "Enabling Acquia Content Hub modules for publishers..."
-$DRUSH pm-enable -y acquia_contenthub \
+# If version is empty then we are on CH 1.x, otherwise CH 2.x:
+VERSION=`$DRUSH pml |grep acquia_contenthub_publisher`
+if [ -z "$VERSION" ]; then
+  # CH 1.x
+  echo " --> On Content Hub 1.x..."
+  $DRUSH pm-enable -y acquia_contenthub
+else
+  # CH 2.x
+  echo " --> On Content Hub 2.x..."
+  $DRUSH pm-enable -y acquia_contenthub \
   acquia_contenthub_publisher \
   acquia_contenthub_curation
+fi
 echo "Done."
 
 # Adding additional configuration to settings.php.
