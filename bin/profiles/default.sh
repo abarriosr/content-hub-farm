@@ -62,12 +62,18 @@ cd $DOCROOT || exit
 # DO NOT MODIFY THIS LIST OF PACKAGES.
 COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush:${DRUSH_VERSION} \
   phpunit/phpunit:${PHPUNIT_VERSION} \
-  symfony/phpunit-bridge:^3.4.3 \
   mikey179/vfsStream \
   drupal/environment_indicator \
   drupal/admin_toolbar \
   drupal/coder \
   squizlabs/php_codesniffer
+
+if ! ${DRUPAL_9} ; then
+  # Only install these packages if it is not Drupal 9.x
+  COMPOSER_MEMORY_LIMIT=-1 composer require symfony/phpunit-bridge
+else
+  COMPOSER_MEMORY_LIMIT=-1 composer require symfony/phpunit-bridge^3.4.3
+fi
 
 # Install devel module.
 COMPOSER_MEMORY_LIMIT=-1 composer require drupal/devel \
