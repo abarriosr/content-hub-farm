@@ -71,6 +71,7 @@ COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush:${DRUSH_VERSION} \
 if ! ${DRUPAL_9} ; then
   # Only install these packages if it is not Drupal 9.x
   COMPOSER_MEMORY_LIMIT=-1 composer require symfony/phpunit-bridge
+  COMPOSER_MEMORY_LIMIT=-1 composer require --dev phpspec/prophecy-phpunit:^2
 else
   COMPOSER_MEMORY_LIMIT=-1 composer require symfony/phpunit-bridge^3.4.3
 fi
