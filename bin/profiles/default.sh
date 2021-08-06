@@ -68,8 +68,7 @@ COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush:${DRUSH_VERSION} \
   drupal/coder \
   squizlabs/php_codesniffer
 
-if ! ${DRUPAL_9} ; then
-  # Only install these packages if it is not Drupal 9.x
+if ${DRUPAL_9} ; then
   COMPOSER_MEMORY_LIMIT=-1 composer require symfony/phpunit-bridge
   COMPOSER_MEMORY_LIMIT=-1 composer require --dev phpspec/prophecy-phpunit:^2
 else
