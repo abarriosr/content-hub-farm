@@ -3,8 +3,8 @@
 SCRIPT_DIRECTORY="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # Capture all runnning containers.
-database_container=`docker-compose images | sed -n '1,2!p' | cut -f 1 -d ' ' | grep -e database`
-containers=`docker-compose images | sed -n '1,2!p' | cut -f 1 -d ' ' | grep -v database`
+database_container=`docker-compose images | sed -n '0,2!p' | cut -f 1 -d ' ' | grep -e database`
+containers=`docker-compose images | sed -n '0,2!p' | cut -f 1 -d ' ' | grep -v database`
 
 if [ -z "$containers" ] ; then
   echo "You need to create the containers first. Execute './chf up'"
