@@ -67,6 +67,7 @@ COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush:${DRUSH_VERSION} \
   drupal/admin_toolbar \
   drupal/coder \
   squizlabs/php_codesniffer
+COMPOSER_MEMORY_LIMIT=-1 composer require --dev phpcompatibility/php-compatibility
 
 if ${DRUPAL_9} ; then
   COMPOSER_MEMORY_LIMIT=-1 composer require symfony/phpunit-bridge
