@@ -67,6 +67,7 @@ COMPOSER_MEMORY_LIMIT=-1 composer require drush/drush:${DRUSH_VERSION} \
   drupal/admin_toolbar \
   drupal/coder \
   squizlabs/php_codesniffer
+COMPOSER_MEMORY_LIMIT=-1 composer require --dev phpcompatibility/php-compatibility
 
 if ${DRUPAL_9} ; then
   COMPOSER_MEMORY_LIMIT=-1 composer require symfony/phpunit-bridge
@@ -113,6 +114,6 @@ COMPOSER_MEMORY_LIMIT=-1 composer install
 chmod -R 777 web/sites
 
 # Configure Coding Standards
-./vendor/bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer
+./vendor/bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer,vendor/phpcompatibility/php-compatibility
 #./vendor/bin/phpcs -n --standard=Drupal,DrupalPractice web/modules/contrib/acquia_contenthub/src web/modules/contrib/acquia_contenthub/tests
 echo "Done."
