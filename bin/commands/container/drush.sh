@@ -11,4 +11,4 @@ for i in "$@" ; do
   fi
 done
 # Executing drush command.
-docker exec -t -w /var/www/html/web $CONTAINER /usr/local/bin/drush.sh $args
+docker exec -t -w /var/www/html/web $CONTAINER /var/www/html/vendor/bin/drush $args
